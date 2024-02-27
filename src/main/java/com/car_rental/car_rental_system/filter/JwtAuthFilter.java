@@ -1,6 +1,6 @@
 package com.car_rental.car_rental_system.filter;
 
-import com.car_rental.car_rental_system.service.JwtService;
+import com.car_rental.car_rental_system.service.impl.JwtServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -25,11 +25,11 @@ import java.io.IOException;
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {
 
-    private JwtService jwtService;
+    private JwtServiceImpl jwtServiceImpl;
     private ObjectMapper mapper;
 
-    public JwtAuthFilter(JwtService jwtService, ObjectMapper mapper) {
-        this.jwtService = jwtService;
+    public JwtAuthFilter(JwtServiceImpl jwtServiceImpl, ObjectMapper mapper) {
+        this.jwtServiceImpl = jwtServiceImpl;
         this.mapper = mapper;
     }
 
@@ -43,7 +43,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
             if (authHeader != null && authHeader.startsWith("Bearer ")) {
                 token = authHeader.substring(7);
-                username = jwtService.extractUsername(token);
+                username = jwtServiceImpl.extractUsername(token);
             }
 
             //If the accessToken is null. It will pass the request to the next filter.
@@ -58,7 +58,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 UserDetails userDetails = User.builder().username("Dilan").build();
 
 
-                if (jwtService.validateToken(token, userDetails)) {
+                if (jwtServiceImpl.validateToken(token, userDetails)) {
                     UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, null);
                     authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authenticationToken);
