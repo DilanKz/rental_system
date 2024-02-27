@@ -35,7 +35,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthenticationResponse> userLogin(@RequestBody AuthenticationRequest request){
+    public ResponseEntity<AuthenticationResponse> Login(@RequestBody AuthenticationRequest request){
 
         // Authenticate user
         Authentication authentication = authenticationManager.authenticate(
@@ -46,6 +46,11 @@ public class AuthController {
         String jwtToken = jwtService.generateToken(userDetails.getUsername());
 
         return ResponseEntity.ok(new AuthenticationResponse(jwtToken));
+    }
+
+    public ResponseEntity<String> register(@RequestBody UserDTO dto){
+        userService.save(dto);
+        return ResponseEntity.ok("User Registered");
     }
 
 }
