@@ -37,7 +37,7 @@ public class VehicleServiceImpl implements VehicleService {
     public VehicleDTO findById(int id) {
         Vehicle vehicle = vehicleRepository.findById(id).orElse(null);
 
-        if (vehicle==null){
+        if (vehicle == null) {
             return null;
         }
 
@@ -47,18 +47,34 @@ public class VehicleServiceImpl implements VehicleService {
     @Override
     public void save(VehicleDTO dto) {
 
+        VehicleDTO vehicleDTO = findByPlateNumber(dto.getPlateNumber());
+
+        //check if there is another vehicle exist by the same plate number if exist then throw an exception
+        if (vehicleDTO != null) {
+            return;
+        }
+
+        vehicleRepository.save(new Vehicle(dto.getVehicleId(), dto.getName(), dto.getModel(), dto.getPlateNumber(), dto.getReqDates()));
     }
 
     @Override
     public void update(VehicleDTO dto) {
 
+        VehicleDTO vehicleDTO = findByPlateNumber(dto.getPlateNumber());
+
+        //check if there is another vehicle exist by the same plate number if exist then throw an exception
+        if (vehicleDTO == null) {
+            return;
+        }
+
+        vehicleRepository.save(new Vehicle(dto.getVehicleId(), dto.getName(), dto.getModel(), dto.getPlateNumber(), dto.getReqDates()));
     }
 
     @Override
     public VehicleDTO findByPlateNumber(String plateNumber) {
         Vehicle vehicle = vehicleRepository.findByPlateNumber(plateNumber).orElse(null);
 
-        if (vehicle==null){
+        if (vehicle == null) {
             return null;
         }
 
@@ -69,7 +85,7 @@ public class VehicleServiceImpl implements VehicleService {
     public VehicleDTO findByModel(String model) {
         Vehicle vehicle = vehicleRepository.findByModel(model).orElse(null);
 
-        if (vehicle==null){
+        if (vehicle == null) {
             return null;
         }
 
