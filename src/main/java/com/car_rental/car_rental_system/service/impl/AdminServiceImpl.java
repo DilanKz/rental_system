@@ -16,6 +16,10 @@ public class AdminServiceImpl implements AdminService {
 
     private AdminRepository adminRepository;
 
+    public AdminServiceImpl(AdminRepository adminRepository) {
+        this.adminRepository = adminRepository;
+    }
+
     @Override
     public AdminDTO findByUsername(String username) {
         Admin admin = adminRepository.findByUsername(username).orElse(null);
