@@ -19,13 +19,13 @@ import java.util.List;
 @NoArgsConstructor
 @ToString
 @Entity
-@Table(name = "car")
-public class Car {
+@Table(name = "vehicle")
+public class Vehicle {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "car_id")
-    private int carId;
+    @Column(name = "vehicle_id")
+    private int vehicle;
 
     @Column(name = "name")
     private String name;
@@ -36,8 +36,7 @@ public class Car {
     @Column(name = "plate_number")
     private String plateNumber;
 
-    @ElementCollection
     @Column(name = "req_dates")
-    private List<Date> reqDates;
+    private String reqDates;
 
 }
