@@ -1,7 +1,10 @@
 package com.car_rental.car_rental_system.service.impl;
 
 import com.car_rental.car_rental_system.dto.UserDTO;
+import com.car_rental.car_rental_system.entity.Admin;
 import com.car_rental.car_rental_system.entity.User;
+import com.car_rental.car_rental_system.error.BadCredentials;
+import com.car_rental.car_rental_system.repo.AdminRepository;
 import com.car_rental.car_rental_system.repo.UserRepository;
 import com.car_rental.car_rental_system.service.UserService;
 import org.springframework.stereotype.Service;
@@ -18,6 +21,12 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
 
     private UserRepository userRepository;
+    private AdminRepository adminRepository;
+
+    public UserServiceImpl(UserRepository userRepository, AdminRepository adminRepository) {
+        this.userRepository = userRepository;
+        this.adminRepository = adminRepository;
+    }
 
     @Override
     public List<UserDTO> findAll() {
@@ -34,9 +43,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public void save(UserDTO userDTO) {
         UserDTO dto = findByUsername(userDTO.getUsername());
+        Admin admin = adminRepository.findByUsername(userDTO.getUsername()).orElse(null);
+        System.out.println(admin);
 
-        if (dto != null) {
-            return;
+        if (dto != null || admin!=null) {
+            throw new BadCredentials("Username is not available");
         }
 
         userRepository.save(new User(0, userDTO.getName(), userDTO.getEmail(), userDTO.getUsername(), userDTO.getPassword()));
@@ -48,7 +59,7 @@ public class UserServiceImpl implements UserService {
         UserDTO dto = findByUsername(userDTO.getUsername());
 
         if (dto == null) {
-            return;
+            throw new BadCredentials("User not found");
         }
 
         userRepository.save(new User(userDTO.getUid(), userDTO.getName(), userDTO.getEmail(), userDTO.getUsername(), userDTO.getPassword()));
