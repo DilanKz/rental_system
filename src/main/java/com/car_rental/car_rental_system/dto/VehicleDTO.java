@@ -16,7 +16,7 @@ import lombok.ToString;
 @ToString
 public class VehicleDTO {
 
-    private int vehicle;
+    private int vehicleId;
 
     private String name;
 
