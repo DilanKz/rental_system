@@ -1,4 +1,4 @@
-package com.car_rental.car_rental_system.error;
+package com.car_rental.car_rental_system.exceptions;
 
 /**
  * @author Dilan
