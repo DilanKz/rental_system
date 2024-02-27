@@ -3,7 +3,7 @@ package com.car_rental.car_rental_system.service.impl;
 import com.car_rental.car_rental_system.dto.UserDTO;
 import com.car_rental.car_rental_system.entity.Admin;
 import com.car_rental.car_rental_system.entity.User;
-import com.car_rental.car_rental_system.error.BadCredentials;
+import com.car_rental.car_rental_system.exceptions.BadCredentials;
 import com.car_rental.car_rental_system.repo.AdminRepository;
 import com.car_rental.car_rental_system.repo.UserRepository;
 import com.car_rental.car_rental_system.service.UserService;

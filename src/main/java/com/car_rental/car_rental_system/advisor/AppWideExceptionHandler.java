@@ -1,9 +1,8 @@
 package com.car_rental.car_rental_system.advisor;
 
-import com.car_rental.car_rental_system.error.BadCredentials;
+import com.car_rental.car_rental_system.exceptions.BadCredentials;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ExceptionHandler;
