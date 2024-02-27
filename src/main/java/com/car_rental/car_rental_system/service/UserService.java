@@ -10,7 +10,6 @@ import java.util.List;
  * @created 27/02/2024 - 12:26 pm
  */
 
-@Service
 public interface UserService {
     List<UserDTO> findAll();
 

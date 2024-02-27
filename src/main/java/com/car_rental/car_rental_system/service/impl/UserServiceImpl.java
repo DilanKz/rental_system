@@ -4,6 +4,7 @@ import com.car_rental.car_rental_system.dto.UserDTO;
 import com.car_rental.car_rental_system.entity.User;
 import com.car_rental.car_rental_system.repo.UserRepository;
 import com.car_rental.car_rental_system.service.UserService;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +13,8 @@ import java.util.List;
  * @author Dilan
  * @created 27/02/2024 - 12:45 pm
  */
+
+@Service
 public class UserServiceImpl implements UserService {
 
     private UserRepository userRepository;
