@@ -46,6 +46,7 @@ public class AuthController {
         return ResponseEntity.ok(new AuthenticationResponse(jwtToken));
     }
 
+    @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody UserDTO dto){
         userService.save(dto);
         return ResponseEntity.ok("User Registered");
