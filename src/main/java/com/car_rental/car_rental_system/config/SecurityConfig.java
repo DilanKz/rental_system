@@ -1,9 +1,6 @@
 package com.car_rental.car_rental_system.config;
 
-import com.car_rental.car_rental_system.entity.Admin;
 import com.car_rental.car_rental_system.filter.JwtAuthFilter;
-import com.car_rental.car_rental_system.repo.AdminRepository;
-import com.car_rental.car_rental_system.repo.UserRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -15,9 +12,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -32,15 +27,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     private JwtAuthFilter jwtFilter;
-    private AdminRepository adminRepository;
-    private UserRepository userRepository;
     private AuthenticationProvider authenticationProvider;
+    private UserDetailsService userDetailsService;
 
-
-    public SecurityConfig(JwtAuthFilter jwtFilter, AdminRepository adminRepository, UserRepository userRepository) {
+    public SecurityConfig(JwtAuthFilter jwtFilter, UserDetailsService userDetailsService) {
         this.jwtFilter = jwtFilter;
-        this.adminRepository = adminRepository;
-        this.userRepository = userRepository;
+        this.userDetailsService = userDetailsService;
     }
 
     @Bean
@@ -69,36 +61,10 @@ public class SecurityConfig {
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setUserDetailsService(userDetailsService());
+        provider.setUserDetailsService(userDetailsService);
         provider.setPasswordEncoder(passwordEncoder());
 
         return provider;
-    }
-
-    @Bean
-    public UserDetailsService userDetailsService() {
-        return username -> {
-            Admin admin = adminRepository.findByUsername(username).orElse(null);
-            if (admin == null) {
-                com.car_rental.car_rental_system.entity.User user = userRepository.findByUsername(username).orElse(null);
-
-                if (user == null) {
-                    throw new UsernameNotFoundException("User not found with username: " + username);
-                }
-
-                return User.builder()
-                        .username(user.getUsername())
-                        .password(user.getPassword())
-                        .authorities("USER")
-                        .build();
-            } else {
-                return User.builder()
-                        .username(admin.getUsername())
-                        .password(admin.getPassword())
-                        .authorities("ADMIN")
-                        .build();
-            }
-        };
     }
 
     @SuppressWarnings("deprecation")
