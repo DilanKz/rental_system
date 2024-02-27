@@ -1,6 +1,7 @@
 package com.car_rental.car_rental_system.service;
 
 import com.car_rental.car_rental_system.dto.UserDTO;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -8,6 +9,8 @@ import java.util.List;
  * @author Dilan
  * @created 27/02/2024 - 12:26 pm
  */
+
+@Service
 public interface UserService {
     List<UserDTO> findAll();
 
