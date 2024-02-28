@@ -2,8 +2,10 @@ package com.car_rental.car_rental_system.service.impl;
 
 import com.car_rental.car_rental_system.dto.VehicleDTO;
 import com.car_rental.car_rental_system.entity.Vehicle;
+import com.car_rental.car_rental_system.exceptions.VehicleException;
 import com.car_rental.car_rental_system.repo.VehicleRepository;
 import com.car_rental.car_rental_system.service.VehicleService;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +14,8 @@ import java.util.List;
  * @author Dilan
  * @created 27/02/2024 - 09:10 pm
  */
+
+@Service
 public class VehicleServiceImpl implements VehicleService {
 
     private VehicleRepository vehicleRepository;
@@ -51,7 +55,7 @@ public class VehicleServiceImpl implements VehicleService {
 
         //check if there is another vehicle exist by the same plate number if exist then throw an exception
         if (vehicleDTO != null) {
-            return;
+            throw new VehicleException("Vehicle in this plate number is already exists");
         }
 
         vehicleRepository.save(new Vehicle(dto.getVehicleId(), dto.getName(), dto.getModel(), dto.getPlateNumber(), dto.getReqDates()));
@@ -64,7 +68,7 @@ public class VehicleServiceImpl implements VehicleService {
 
         //check if there is another vehicle exist by the same plate number if exist then throw an exception
         if (vehicleDTO == null) {
-            return;
+            throw new VehicleException("No vehicle is found for update");
         }
 
         vehicleRepository.save(new Vehicle(dto.getVehicleId(), dto.getName(), dto.getModel(), dto.getPlateNumber(), dto.getReqDates()));
