@@ -1,5 +1,6 @@
 package com.car_rental.car_rental_system.entity;
 
+import com.car_rental.car_rental_system.entity.embedded.LocationDetails;
 import com.car_rental.car_rental_system.entity.enums.RequestStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -36,11 +37,23 @@ public class RideRequest {
     @Column(name = "return_dates")
     private Date returnDate;
 
-    @Column(name = "pickup_location")
-    private String pickupLocation;
+    @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "address", column = @Column(name = "pickup_address")),
+            @AttributeOverride(name = "city", column = @Column(name = "pickup_city")),
+            @AttributeOverride(name = "longitude", column = @Column(name = "pickup_longitude")),
+            @AttributeOverride(name = "latitude", column = @Column(name = "pickup_latitude"))
+    })
+    private LocationDetails pickupLocation;
 
-    @Column(name = "destination")
-    private String destination;
+    @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "address", column = @Column(name = "destination_address")),
+            @AttributeOverride(name = "city", column = @Column(name = "destination_city")),
+            @AttributeOverride(name = "longitude", column = @Column(name = "destination_longitude")),
+            @AttributeOverride(name = "latitude", column = @Column(name = "destination_latitude"))
+    })
+    private LocationDetails destination;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false, columnDefinition = "varchar(10) default 'PENDING'")
