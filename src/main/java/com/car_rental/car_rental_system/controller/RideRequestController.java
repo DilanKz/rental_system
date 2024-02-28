@@ -112,4 +112,19 @@ public class RideRequestController {
         return ResponseEntity.ok("Request status has been updated successfully.");
     }
 
+    /**
+     * Endpoint for assigning a vehicle to an existing ride request.
+     *
+     * @param id        The ID of the ride request to update
+     * @param vehicleId The ID of the vehicle to assign to the ride request
+     * @return ResponseEntity with a success message upon successful assignment
+     */
+    @PutMapping("/{id}")
+    public ResponseEntity assignVehicle(@PathVariable int id, @RequestParam int vehicleId) {
+        //assign vehicle to a request
+        requestService.assignVehicle(id,vehicleId);
+
+        return ResponseEntity.ok("Vehicle assigned to the ride request successfully.");
+    }
+
 }
