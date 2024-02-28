@@ -30,7 +30,7 @@ public class RideRequestDTO {
 
     private String status;
 
-    private Vehicle car;
+    private VehicleDTO vehicleDTO;
 
-    private User user;
+    private UserDTO user;
 }
