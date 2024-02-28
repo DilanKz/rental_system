@@ -47,4 +47,12 @@ public interface RideRequestService {
      * @param dto The RideRequestDTO representing the updated ride request information
      */
     void update(RideRequestDTO dto);
+
+    /**
+     * Updates the status of an existing ride request.
+     *
+     * @param id     The ID of the ride request to update
+     * @param status The new status to set for the ride request
+     */
+    void updateStatus(int id, RequestStatus status);
 }
