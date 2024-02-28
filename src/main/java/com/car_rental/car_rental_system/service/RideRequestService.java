@@ -11,13 +11,40 @@ import java.util.List;
  */
 public interface RideRequestService {
 
+    /**
+     * Retrieves all ride requests.
+     *
+     * @return List of RideRequestDTO representing all ride requests
+     */
     List<RideRequestDTO> findAll();
-    
+
+    /**
+     * Retrieves ride requests by status.
+     *
+     * @param status The status of the ride requests to retrieve
+     * @return List of RideRequestDTO representing ride requests with the specified status
+     */
     List<RideRequestDTO> findByState(RequestStatus status);
 
+    /**
+     * Retrieves a ride request by its ID.
+     *
+     * @param id The ID of the ride request to retrieve
+     * @return RideRequestDTO representing the requested ride request, or null if not found
+     */
     RideRequestDTO findById(int id);
 
+    /**
+     * Saves a new ride request.
+     *
+     * @param dto The RideRequestDTO representing the ride request to be saved
+     */
     void save(RideRequestDTO dto);
 
+    /**
+     * Updates an existing ride request.
+     *
+     * @param dto The RideRequestDTO representing the updated ride request information
+     */
     void update(RideRequestDTO dto);
 }
