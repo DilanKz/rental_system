@@ -33,7 +33,7 @@ public class VehicleController {
     public ResponseEntity<String> save(@RequestBody VehicleDTO dto) {
         vehicleService.save(dto);
 
-        return ResponseEntity.ok("Request is successfully sent");
+        return ResponseEntity.ok("Vehicle is successfully saved");
     }
 
     /**
@@ -45,7 +45,7 @@ public class VehicleController {
     @PutMapping
     public ResponseEntity<String> update(@RequestBody VehicleDTO dto) {
         vehicleService.update(dto);
-        return ResponseEntity.ok("Request is successfully updated");
+        return ResponseEntity.ok("Vehicle is successfully updated");
     }
 
     /**
