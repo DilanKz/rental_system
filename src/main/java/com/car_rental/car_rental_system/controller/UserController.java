@@ -3,7 +3,6 @@ package com.car_rental.car_rental_system.controller;
 import com.car_rental.car_rental_system.dto.UserDTO;
 import com.car_rental.car_rental_system.service.UserService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -22,7 +21,6 @@ public class UserController {
     }
 
     @PutMapping
-    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<String> updateAccount(@RequestBody UserDTO userDTO){
 
         userService.update(userDTO);
