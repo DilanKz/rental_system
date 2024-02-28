@@ -2,6 +2,7 @@ package com.car_rental.car_rental_system.service.impl;
 
 import com.car_rental.car_rental_system.dto.VehicleDTO;
 import com.car_rental.car_rental_system.entity.Vehicle;
+import com.car_rental.car_rental_system.entity.enums.VehicleModels;
 import com.car_rental.car_rental_system.exceptions.VehicleException;
 import com.car_rental.car_rental_system.repo.VehicleRepository;
 import com.car_rental.car_rental_system.service.VehicleService;
@@ -86,7 +87,7 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
-    public VehicleDTO findByModel(String model) {
+    public VehicleDTO findByModel(VehicleModels model) {
         Vehicle vehicle = vehicleRepository.findByModel(model).orElse(null);
 
         if (vehicle == null) {
