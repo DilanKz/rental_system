@@ -11,6 +11,8 @@ import java.util.List;
 public interface RideRequestService {
 
     List<RideRequestDTO> findAll();
+    
+    List<RideRequestDTO> findByState(String status);
 
     RideRequestDTO findById(int id);
 
