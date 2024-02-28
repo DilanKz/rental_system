@@ -1,6 +1,7 @@
 package com.car_rental.car_rental_system.controller;
 
 import com.car_rental.car_rental_system.dto.RideRequestDTO;
+import com.car_rental.car_rental_system.entity.embedded.LocationDetails;
 import com.car_rental.car_rental_system.entity.enums.RequestStatus;
 import com.car_rental.car_rental_system.service.RideRequestService;
 import org.springframework.http.ResponseEntity;
@@ -68,6 +69,21 @@ public class RideRequestController {
         List<RideRequestDTO> byState = requestService.findByState(status);
 
         return ResponseEntity.ok(byState);
+    }
+
+    /**
+     * Retrieves ride requests based on the specified pickup location and destination.
+     *
+     * @param pickupLocation The details of the pickup location
+     * @param destination The details of the destination
+     * @return ResponseEntity with a list of RideRequestDTO representing ride requests matching the pickup location and destination
+     */
+    @GetMapping("/date")
+    public ResponseEntity getRequestByDates(@RequestBody LocationDetails pickupLocation, @RequestBody LocationDetails destination){
+
+        List<RideRequestDTO> requestDTOS = requestService.findByPickupLocationAndDestination(pickupLocation, destination);
+
+        return ResponseEntity.ok(requestDTOS);
     }
 
     /**
