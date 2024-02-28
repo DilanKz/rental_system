@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import java.sql.Date;
+
 /**
  * @author Dilan
  * @created 27/02/2024 - 10:21 am
@@ -27,8 +29,11 @@ public class RideRequest {
     @Column(name = "vehicle_model")
     private String name;
 
-    @Column(name = "req_dates")
-    private String date;
+    @Column(name = "pickup_dates")
+    private Date pickupDate;
+
+    @Column(name = "return_dates")
+    private Date returnDate;
 
     @Column(name = "pickup_location")
     private String pickupLocation;
