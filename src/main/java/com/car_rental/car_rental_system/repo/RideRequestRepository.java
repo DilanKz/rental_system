@@ -1,6 +1,7 @@
 package com.car_rental.car_rental_system.repo;
 
 import com.car_rental.car_rental_system.entity.RideRequest;
+import com.car_rental.car_rental_system.entity.embedded.LocationDetails;
 import com.car_rental.car_rental_system.entity.enums.RequestStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -12,4 +13,6 @@ import java.util.List;
  */
 public interface RideRequestRepository extends JpaRepository<RideRequest,Integer> {
     List<RideRequest> findAllByStatus(RequestStatus status);
+
+    List<RideRequest> findByPickupLocationAndDestination(LocationDetails pickupLocation, LocationDetails destination);
 }
