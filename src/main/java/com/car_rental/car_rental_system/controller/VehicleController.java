@@ -25,7 +25,6 @@ public class VehicleController {
     }
 
     @PostMapping
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> save(@RequestBody VehicleDTO dto){
         vehicleService.save(dto);
 
@@ -33,14 +32,12 @@ public class VehicleController {
     }
 
     @PutMapping
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> update(@RequestBody VehicleDTO dto){
         vehicleService.update(dto);
         return ResponseEntity.ok("Request is successfully updated");
     }
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('USER','ADMIN')")
     public ResponseEntity findAll(){
         List<VehicleDTO> list = vehicleService.findAll();
 
@@ -53,7 +50,6 @@ public class VehicleController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('USER','ADMIN')")
     public ResponseEntity getOne(@PathVariable int id){
         VehicleDTO vehicleDTO = vehicleService.findById(id);
 
