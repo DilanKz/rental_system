@@ -1,6 +1,7 @@
 package com.car_rental.car_rental_system.service;
 
 import com.car_rental.car_rental_system.dto.RideRequestDTO;
+import com.car_rental.car_rental_system.entity.embedded.LocationDetails;
 import com.car_rental.car_rental_system.entity.enums.RequestStatus;
 
 import java.util.List;
@@ -63,4 +64,13 @@ public interface RideRequestService {
      * @param vehicleId The ID of the vehicle to assign to the ride request
      */
     void assignVehicle(int id, int vehicleId);
+
+    /**
+     * Finds ride requests based on the specified pickup location and destination.
+     *
+     * @param pickupLocation The details of the pickup location
+     * @param destination    The details of the destination
+     * @return List of RideRequestDTO representing ride requests matching the pickup location and destination
+     */
+    List<RideRequestDTO> findByPickupLocationAndDestination(LocationDetails pickupLocation, LocationDetails destination);
 }
