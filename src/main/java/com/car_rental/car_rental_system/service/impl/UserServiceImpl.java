@@ -56,7 +56,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void update(UserDTO userDTO) {
-        UserDTO dto = findByUsername(userDTO.getUsername());
+        UserDTO dto = findById(userDTO.getUid());
 
         if (dto == null) {
             throw new BadCredentials("User not found");
