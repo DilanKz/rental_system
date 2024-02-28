@@ -111,6 +111,24 @@ public class RideRequestServiceImpl implements RideRequestService {
     }
 
     /**
+     * Assigns a vehicle to an existing ride request.
+     *
+     * @param id        The ID of the ride request to update
+     * @param vehicleId The ID of the vehicle to assign to the ride request
+     * @throws RuntimeException if no ride request is found with the given ID
+     */
+    @Override
+    public void assignVehicle(int id, int vehicleId) {
+        RideRequestDTO rideRequestDTO = findById(id);
+        if (rideRequestDTO==null){
+            throw new RuntimeException("No Request Found");
+        }
+
+        rideRequestDTO.setVehicle(vehicleId);
+        repository.save(rideRequestDTOConverter(rideRequestDTO));
+    }
+
+    /**
      * Converts a list of RideRequest entities to a list of RideRequestDTOs.
      *
      * @param requests The list of RideRequest entities to convert
