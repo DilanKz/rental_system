@@ -55,4 +55,12 @@ public interface RideRequestService {
      * @param status The new status to set for the ride request
      */
     void updateStatus(int id, RequestStatus status);
+
+    /**
+     * Assigns a vehicle to an existing ride request.
+     *
+     * @param id        The ID of the ride request to update
+     * @param vehicleId The ID of the vehicle to assign to the ride request
+     */
+    void assignVehicle(int id, int vehicleId);
 }
