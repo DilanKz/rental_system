@@ -106,7 +106,7 @@ public class VehicleServiceImpl implements VehicleService {
      */
     @Override
     public VehicleDTO findByPlateNumber(String plateNumber) {
-        Vehicle vehicle = vehicleRepository.findByPlateNumber(plateNumber).orElse(null);
+        Vehicle vehicle = vehicleRepository.findByPlateNumberContainingIgnoreCase(plateNumber).orElse(null);
 
         if (vehicle == null) {
             return null;
