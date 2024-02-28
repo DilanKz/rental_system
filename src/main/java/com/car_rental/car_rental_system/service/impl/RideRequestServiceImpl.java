@@ -4,6 +4,7 @@ import com.car_rental.car_rental_system.dto.RideRequestDTO;
 import com.car_rental.car_rental_system.entity.RideRequest;
 import com.car_rental.car_rental_system.entity.User;
 import com.car_rental.car_rental_system.entity.Vehicle;
+import com.car_rental.car_rental_system.entity.embedded.LocationDetails;
 import com.car_rental.car_rental_system.entity.enums.RequestStatus;
 import com.car_rental.car_rental_system.exceptions.BadCredentials;
 import com.car_rental.car_rental_system.exceptions.VehicleException;
@@ -126,6 +127,11 @@ public class RideRequestServiceImpl implements RideRequestService {
 
         rideRequestDTO.setVehicle(vehicleId);
         repository.save(rideRequestDTOConverter(rideRequestDTO));
+    }
+
+    @Override
+    public List<RideRequestDTO> findByPickupLocationAndDestination(LocationDetails pickupLocation, LocationDetails destination) {
+        return rideListConverter(repository.findByPickupLocationAndDestination(pickupLocation,destination));
     }
 
     /**
