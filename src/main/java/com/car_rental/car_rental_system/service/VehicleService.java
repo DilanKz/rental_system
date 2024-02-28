@@ -60,7 +60,7 @@ public interface VehicleService {
      * Retrieves vehicles by model.
      *
      * @param model The model of the vehicles to retrieve
-     * @return VehicleDTO representing the requested vehicles with the specified model
+     * @return List<VehicleDTO> representing the requested vehicles with the specified model
      */
-    VehicleDTO findByModel(VehicleModels model);
+    List<VehicleDTO> findByModel(VehicleModels model);
 }
