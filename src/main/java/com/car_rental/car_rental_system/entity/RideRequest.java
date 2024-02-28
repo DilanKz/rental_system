@@ -42,7 +42,8 @@ public class RideRequest {
     @Column(name = "destination")
     private String destination;
 
-    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false, columnDefinition = "varchar(10) default 'PENDING'")
     private RequestStatus status;
 
     @ManyToOne
