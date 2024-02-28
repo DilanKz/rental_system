@@ -82,4 +82,23 @@ public class VehicleController {
         return ResponseEntity.ok().body(vehicleDTO);
 
     }
+
+    /**
+     * Endpoint for retrieving all vehicles that match the specified plate number.
+     *
+     * @param plateNumber The plate number of the vehicles to retrieve
+     * @return ResponseEntity with a list of VehicleDTO representing vehicles matching the plate number,
+     *         or a bad request message if no vehicles are found
+     */
+    @GetMapping("/platenumber")
+    public ResponseEntity findAllByPlateNumber(String plateNumber) {
+        List<VehicleDTO> vehicleDTOS = vehicleService.findAllByPlateNumber(plateNumber);
+
+        if (vehicleDTOS == null) {
+            return ResponseEntity.badRequest().body("No vehicles found matching the specified plate number");
+        }
+
+        return ResponseEntity.ok().body(vehicleDTOS);
+
+    }
 }
