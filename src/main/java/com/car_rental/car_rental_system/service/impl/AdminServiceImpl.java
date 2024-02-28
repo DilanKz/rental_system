@@ -20,12 +20,21 @@ public class AdminServiceImpl implements AdminService {
         this.adminRepository = adminRepository;
     }
 
+    /**
+     * Retrieves an administrator by their username.
+     *
+     * @param username The username of the administrator to retrieve
+     * @return AdminDTO representing the requested administrator, or null if not found
+     */
     @Override
     public AdminDTO findByUsername(String username) {
+        // Retrieve admin entity from the repository by username
         Admin admin = adminRepository.findByUsername(username).orElse(null);
 
+        // If admin not found, return null
         if (admin == null) return null;
 
+        // Map admin entity to AdminDTO and return
         return new AdminDTO(admin.getId(), admin.getUsername(), admin.getPassword());
     }
 }

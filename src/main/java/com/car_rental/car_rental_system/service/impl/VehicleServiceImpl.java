@@ -25,6 +25,11 @@ public class VehicleServiceImpl implements VehicleService {
         this.vehicleRepository = vehicleRepository;
     }
 
+    /**
+     * Retrieves all vehicles.
+     *
+     * @return List of VehicleDTO representing all vehicles
+     */
     @Override
     public List<VehicleDTO> findAll() {
 
@@ -38,6 +43,12 @@ public class VehicleServiceImpl implements VehicleService {
         return list;
     }
 
+    /**
+     * Retrieves a vehicle by its ID.
+     *
+     * @param id The ID of the vehicle to retrieve
+     * @return VehicleDTO representing the requested vehicle, or null if not found
+     */
     @Override
     public VehicleDTO findById(int id) {
         Vehicle vehicle = vehicleRepository.findById(id).orElse(null);
@@ -49,6 +60,12 @@ public class VehicleServiceImpl implements VehicleService {
         return new VehicleDTO(vehicle.getVehicleId(), vehicle.getName(), vehicle.getModel(), vehicle.getPlateNumber(), vehicle.getReqDates());
     }
 
+    /**
+     * Saves a new vehicle.
+     *
+     * @param dto The VehicleDTO representing the vehicle to be saved
+     * @throws VehicleException If a vehicle with the same plate number already exists
+     */
     @Override
     public void save(VehicleDTO dto) {
 
@@ -62,6 +79,12 @@ public class VehicleServiceImpl implements VehicleService {
         vehicleRepository.save(new Vehicle(dto.getVehicleId(), dto.getName(), dto.getModel(), dto.getPlateNumber(), dto.getReqDates()));
     }
 
+    /**
+     * Updates an existing vehicle.
+     *
+     * @param dto The VehicleDTO representing the updated vehicle information
+     * @throws VehicleException If the vehicle to update is not found
+     */
     @Override
     public void update(VehicleDTO dto) {
 
@@ -75,6 +98,12 @@ public class VehicleServiceImpl implements VehicleService {
         vehicleRepository.save(new Vehicle(dto.getVehicleId(), dto.getName(), dto.getModel(), dto.getPlateNumber(), dto.getReqDates()));
     }
 
+    /**
+     * Retrieves a vehicle by its plate number.
+     *
+     * @param plateNumber The plate number of the vehicle to retrieve
+     * @return VehicleDTO representing the requested vehicle, or null if not found
+     */
     @Override
     public VehicleDTO findByPlateNumber(String plateNumber) {
         Vehicle vehicle = vehicleRepository.findByPlateNumber(plateNumber).orElse(null);
@@ -86,6 +115,12 @@ public class VehicleServiceImpl implements VehicleService {
         return new VehicleDTO(vehicle.getVehicleId(), vehicle.getName(), vehicle.getModel(), vehicle.getPlateNumber(), vehicle.getReqDates());
     }
 
+    /**
+     * Retrieves a vehicle by its model.
+     *
+     * @param model The model of the vehicle to retrieve
+     * @return VehicleDTO representing the requested vehicle, or null if not found
+     */
     @Override
     public VehicleDTO findByModel(VehicleModels model) {
         Vehicle vehicle = vehicleRepository.findByModel(model).orElse(null);

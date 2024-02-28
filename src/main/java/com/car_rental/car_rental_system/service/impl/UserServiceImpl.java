@@ -28,6 +28,11 @@ public class UserServiceImpl implements UserService {
         this.adminRepository = adminRepository;
     }
 
+    /**
+     * Retrieves all users.
+     *
+     * @return List of UserDTO representing all users
+     */
     @Override
     public List<UserDTO> findAll() {
         List<User> users = userRepository.findAll();
@@ -40,6 +45,12 @@ public class UserServiceImpl implements UserService {
         return userDTOS;
     }
 
+    /**
+     * Saves a new user.
+     *
+     * @param userDTO The UserDTO representing the user to be saved
+     * @throws BadCredentials If the username is not available (already exists)
+     */
     @Override
     public void save(UserDTO userDTO) {
         UserDTO dto = findByUsername(userDTO.getUsername());
@@ -54,6 +65,12 @@ public class UserServiceImpl implements UserService {
 
     }
 
+    /**
+     * Updates an existing user.
+     *
+     * @param userDTO The UserDTO representing the updated user information
+     * @throws BadCredentials If the user with the specified ID is not found
+     */
     @Override
     public void update(UserDTO userDTO) {
         UserDTO dto = findById(userDTO.getUid());
@@ -65,6 +82,12 @@ public class UserServiceImpl implements UserService {
         userRepository.save(new User(userDTO.getUid(), userDTO.getName(), userDTO.getEmail(), userDTO.getUsername(), userDTO.getPassword()));
     }
 
+    /**
+     * Retrieves a user by their ID.
+     *
+     * @param id The ID of the user to retrieve
+     * @return UserDTO representing the requested user, or null if not found
+     */
     @Override
     public UserDTO findById(int id) {
 
@@ -75,6 +98,12 @@ public class UserServiceImpl implements UserService {
         return new UserDTO(user.getUid(), user.getName(), user.getEmail(), user.getUsername(), user.getPassword());
     }
 
+    /**
+     * Retrieves a user by their username.
+     *
+     * @param username The username of the user to retrieve
+     * @return UserDTO representing the requested user, or null if not found
+     */
     @Override
     public UserDTO findByUsername(String username) {
         User user = userRepository.findByUsername(username).orElse(null);
@@ -84,6 +113,11 @@ public class UserServiceImpl implements UserService {
         return new UserDTO(user.getUid(), user.getName(), user.getEmail(), user.getUsername(), user.getPassword());
     }
 
+    /**
+     * Deletes a user by their ID.
+     *
+     * @param id The ID of the user to delete
+     */
     @Override
     public void delete(int id) {
         userRepository.deleteById(id);
