@@ -1,14 +1,18 @@
 package com.car_rental.car_rental_system.service.impl;
 
 import com.car_rental.car_rental_system.dto.RideRequestDTO;
-import com.car_rental.car_rental_system.dto.UserDTO;
-import com.car_rental.car_rental_system.dto.VehicleDTO;
 import com.car_rental.car_rental_system.entity.RideRequest;
 import com.car_rental.car_rental_system.entity.User;
 import com.car_rental.car_rental_system.entity.Vehicle;
+import com.car_rental.car_rental_system.entity.enums.RequestStatus;
+import com.car_rental.car_rental_system.exceptions.BadCredentials;
+import com.car_rental.car_rental_system.exceptions.VehicleException;
 import com.car_rental.car_rental_system.repo.RideRequestRepository;
+import com.car_rental.car_rental_system.repo.UserRepository;
+import com.car_rental.car_rental_system.repo.VehicleRepository;
 import com.car_rental.car_rental_system.service.RideRequestService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,12 +23,17 @@ import java.util.List;
  */
 
 @Service
+@Transactional
 public class RideRequestServiceImpl implements RideRequestService {
 
     private RideRequestRepository repository;
+    private VehicleRepository vehicleRepository;
+    private UserRepository userRepository;
 
-    public RideRequestServiceImpl(RideRequestRepository repository) {
+    public RideRequestServiceImpl(RideRequestRepository repository, VehicleRepository vehicleRepository, UserRepository userRepository) {
         this.repository = repository;
+        this.vehicleRepository = vehicleRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -33,7 +42,7 @@ public class RideRequestServiceImpl implements RideRequestService {
     }
 
     @Override
-    public List<RideRequestDTO> findByState(String status) {
+    public List<RideRequestDTO> findByState(RequestStatus status) {
         return rideListConverter(repository.findAllByStatus(status));
     }
 
@@ -75,24 +84,24 @@ public class RideRequestServiceImpl implements RideRequestService {
                 request.getPickupLocation(),
                 request.getDestination(),
                 request.getStatus(),
-                new VehicleDTO(
-                        request.getCar().getVehicleId(),
-                        request.getCar().getName(),
-                        request.getCar().getModel(),
-                        request.getCar().getPlateNumber(),
-                        request.getCar().getReqDates()
-                ),
-                new UserDTO(
-                        request.getUser().getUid(),
-                        request.getUser().getName(),
-                        request.getUser().getEmail(),
-                        request.getUser().getUsername(),
-                        request.getUser().getPassword()
-                )
+                request.getCar().getVehicleId(),
+                request.getUser().getUid()
         );
     }
 
     private RideRequest rideRequestDTOConverter(RideRequestDTO dto){
+
+        User user = userRepository.findById(dto.getUser()).orElse(null);
+        Vehicle vehicle = vehicleRepository.findById(dto.getVehicle()).orElse(null);
+
+        if (user==null){
+            throw new BadCredentials("No User Found");
+        }
+
+        if (vehicle==null){
+            throw new VehicleException("No Vehicle Found");
+        }
+
         return new RideRequest(
                 dto.getReqNo(),
                 dto.getName(),
@@ -101,20 +110,8 @@ public class RideRequestServiceImpl implements RideRequestService {
                 dto.getPickupLocation(),
                 dto.getDestination(),
                 dto.getStatus(),
-                new Vehicle(
-                        dto.getVehicleDTO().getVehicleId(),
-                        dto.getVehicleDTO().getName(),
-                        dto.getVehicleDTO().getModel(),
-                        dto.getVehicleDTO().getPlateNumber(),
-                        dto.getVehicleDTO().getReqDates()
-                ),
-                new User(
-                        dto.getUser().getUid(),
-                        dto.getUser().getName(),
-                        dto.getUser().getEmail(),
-                        dto.getUser().getUsername(),
-                        dto.getUser().getPassword()
-                )
+                vehicle,
+                user
         );
     }
 }
