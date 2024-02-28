@@ -1,6 +1,7 @@
 package com.car_rental.car_rental_system.controller;
 
 import com.car_rental.car_rental_system.dto.VehicleDTO;
+import com.car_rental.car_rental_system.entity.enums.VehicleModels;
 import com.car_rental.car_rental_system.service.VehicleService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -96,6 +97,25 @@ public class VehicleController {
 
         if (vehicleDTOS == null) {
             return ResponseEntity.badRequest().body("No vehicles found matching the specified plate number");
+        }
+
+        return ResponseEntity.ok().body(vehicleDTOS);
+
+    }
+
+    /**
+     * Endpoint for retrieving all vehicles that match the specified plate number.
+     *
+     * @param models The models of the vehicles to retrieve
+     * @return ResponseEntity with a list of VehicleDTO representing vehicles matching the models,
+     *         or a bad request message if no vehicles are found
+     */
+    @GetMapping("/model")
+    public ResponseEntity findAllByModel(VehicleModels models) {
+        List<VehicleDTO> vehicleDTOS = vehicleService.findByModel(models);
+
+        if (vehicleDTOS == null) {
+            return ResponseEntity.badRequest().body("No vehicles found matching models");
         }
 
         return ResponseEntity.ok().body(vehicleDTOS);
