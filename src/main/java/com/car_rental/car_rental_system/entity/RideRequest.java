@@ -7,7 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import java.sql.Date;
+import java.util.Date;
 
 /**
  * @author Dilan
