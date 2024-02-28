@@ -32,7 +32,7 @@ public class Vehicle {
     private String name;
 
     @Column(name = "model")
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     private VehicleModels model;
 
     @Column(name = "plate_number")
