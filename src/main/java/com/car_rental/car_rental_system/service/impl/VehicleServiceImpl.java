@@ -106,13 +106,26 @@ public class VehicleServiceImpl implements VehicleService {
      */
     @Override
     public VehicleDTO findByPlateNumber(String plateNumber) {
-        Vehicle vehicle = vehicleRepository.findByPlateNumberContainingIgnoreCase(plateNumber).orElse(null);
+        Vehicle vehicle = vehicleRepository.findByPlateNumber(plateNumber).orElse(null);
 
         if (vehicle == null) {
             return null;
         }
 
         return new VehicleDTO(vehicle.getVehicleId(), vehicle.getName(), vehicle.getModel(), vehicle.getPlateNumber(), vehicle.getReqDates());
+    }
+
+    @Override
+    public List<VehicleDTO> findAllByPlateNumber(String plateNumber) {
+
+        List<Vehicle> vehicles = vehicleRepository.findAllByPlateNumberContainingIgnoreCase(plateNumber);
+        List<VehicleDTO> list = new ArrayList<>();
+
+        for (Vehicle vehicle : vehicles) {
+            list.add(new VehicleDTO(vehicle.getVehicleId(), vehicle.getName(), vehicle.getModel(), vehicle.getPlateNumber(), vehicle.getReqDates()));
+        }
+
+        return list;
     }
 
     /**
