@@ -6,6 +6,8 @@ import com.car_rental.car_rental_system.service.RideRequestService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * @author Dilan
  * @created 28/02/2024 - 10:47 am
@@ -61,11 +63,11 @@ public class RideRequestController {
      * @return ResponseEntity with status OK and a list of ride requests with the specified status
      */
     @GetMapping("/status/{status}")
-    public ResponseEntity getRequestOnStatus(@PathVariable String status){
+    public ResponseEntity getRequestOnStatus(@PathVariable RequestStatus status){
 
-        // Get all requests based on the status
+        List<RideRequestDTO> byState = requestService.findByState(status);
 
-        return ResponseEntity.ok("");
+        return ResponseEntity.ok(byState);
     }
 
     /**
@@ -105,6 +107,7 @@ public class RideRequestController {
     @PatchMapping("/{id}")
     public ResponseEntity updateRequestStatus(@PathVariable int id, @RequestParam RequestStatus status) {
         //Update request status to approve or reject
+        requestService.updateStatus(id,status);
 
         return ResponseEntity.ok("Request status has been updated successfully.");
     }
