@@ -2,6 +2,7 @@ package com.car_rental.car_rental_system.dto;
 
 import com.car_rental.car_rental_system.entity.User;
 import com.car_rental.car_rental_system.entity.Vehicle;
+import com.car_rental.car_rental_system.entity.enums.RequestStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -32,9 +33,9 @@ public class RideRequestDTO {
 
     private String destination;
 
-    private String status;
+    private RequestStatus status;
 
-    private VehicleDTO vehicleDTO;
+    private int vehicle;
 
-    private UserDTO user;
+    private int user;
 }
