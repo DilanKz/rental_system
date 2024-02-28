@@ -20,6 +20,12 @@ public class UserController {
         this.userService = userService;
     }
 
+    /**
+     * Endpoint for updating user account information.
+     *
+     * @param userDTO The UserDTO containing updated user information
+     * @return ResponseEntity with a success message upon successful update
+     */
     @PutMapping
     public ResponseEntity<String> updateAccount(@RequestBody UserDTO userDTO){
 

@@ -32,6 +32,12 @@ public class AuthController {
         this.jwtService = jwtService;
     }
 
+    /**
+     * Endpoint for user login.
+     *
+     * @param request The AuthenticationRequest containing username and password
+     * @return ResponseEntity containing the JWT token upon successful authentication
+     */
     @PostMapping("/login")
     public ResponseEntity<AuthenticationResponse> Login(@RequestBody AuthenticationRequest request){
 
@@ -46,6 +52,12 @@ public class AuthController {
         return ResponseEntity.ok(new AuthenticationResponse(jwtToken));
     }
 
+    /**
+     * Endpoint for user registration.
+     *
+     * @param dto The UserDTO containing user registration information
+     * @return ResponseEntity with a success message upon successful registration
+     */
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody UserDTO dto){
         userService.save(dto);

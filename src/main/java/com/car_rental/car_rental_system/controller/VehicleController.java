@@ -3,7 +3,6 @@ package com.car_rental.car_rental_system.controller;
 import com.car_rental.car_rental_system.dto.VehicleDTO;
 import com.car_rental.car_rental_system.service.VehicleService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,24 +23,41 @@ public class VehicleController {
         this.vehicleService = vehicleService;
     }
 
+    /**
+     * Endpoint for saving a new vehicle.
+     *
+     * @param dto The VehicleDTO containing information about the vehicle to be saved
+     * @return ResponseEntity with a success message upon successful save
+     */
     @PostMapping
-    public ResponseEntity<String> save(@RequestBody VehicleDTO dto){
+    public ResponseEntity<String> save(@RequestBody VehicleDTO dto) {
         vehicleService.save(dto);
 
         return ResponseEntity.ok("Request is successfully sent");
     }
 
+    /**
+     * Endpoint for updating an existing vehicle.
+     *
+     * @param dto The VehicleDTO containing updated information about the vehicle
+     * @return ResponseEntity with a success message upon successful update
+     */
     @PutMapping
-    public ResponseEntity<String> update(@RequestBody VehicleDTO dto){
+    public ResponseEntity<String> update(@RequestBody VehicleDTO dto) {
         vehicleService.update(dto);
         return ResponseEntity.ok("Request is successfully updated");
     }
 
+    /**
+     * Endpoint for retrieving all vehicles.
+     *
+     * @return ResponseEntity with a list of VehicleDTO representing all vehicles
+     */
     @GetMapping
-    public ResponseEntity findAll(){
+    public ResponseEntity findAll() {
         List<VehicleDTO> list = vehicleService.findAll();
 
-        if (list==null){
+        if (list == null) {
             return ResponseEntity.badRequest().body("Empty list");
         }
 
@@ -49,11 +65,17 @@ public class VehicleController {
 
     }
 
+    /**
+     * Endpoint for retrieving a specific vehicle by its ID.
+     *
+     * @param id The ID of the vehicle to retrieve
+     * @return ResponseEntity with the requested VehicleDTO if found, or a bad request message if not found
+     */
     @GetMapping("/{id}")
-    public ResponseEntity getOne(@PathVariable int id){
+    public ResponseEntity getOne(@PathVariable int id) {
         VehicleDTO vehicleDTO = vehicleService.findById(id);
 
-        if (vehicleDTO==null){
+        if (vehicleDTO == null) {
             return ResponseEntity.badRequest().body("No vehicle found in this id");
         }
 
