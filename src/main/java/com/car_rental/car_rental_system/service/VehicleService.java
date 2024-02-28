@@ -49,6 +49,14 @@ public interface VehicleService {
     VehicleDTO findByPlateNumber(String plateNumber);
 
     /**
+     * Retrieves a vehicle by its plate number.
+     *
+     * @param plateNumber The plate number of the vehicle to retrieve
+     * @return List of VehicleDTO representing all vehicles
+     */
+    List<VehicleDTO> findAllByPlateNumber(String plateNumber);
+
+    /**
      * Retrieves vehicles by model.
      *
      * @param model The model of the vehicles to retrieve
