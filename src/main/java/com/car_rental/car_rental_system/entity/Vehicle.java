@@ -1,5 +1,6 @@
 package com.car_rental.car_rental_system.entity;
 
+import com.car_rental.car_rental_system.entity.enums.VehicleModels;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -31,7 +32,8 @@ public class Vehicle {
     private String name;
 
     @Column(name = "model")
-    private String model;
+    @Enumerated
+    private VehicleModels model;
 
     @Column(name = "plate_number")
     private String plateNumber;
