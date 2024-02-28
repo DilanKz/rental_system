@@ -93,6 +93,24 @@ public class RideRequestServiceImpl implements RideRequestService {
     }
 
     /**
+     * Updates the status of an existing ride request.
+     *
+     * @param id     The ID of the ride request to update
+     * @param status The new status to set for the ride request
+     * @throws RuntimeException if no ride request is found with the given ID
+     */
+    @Override
+    public void updateStatus(int id, RequestStatus status) {
+        RideRequestDTO rideRequestDTO = findById(id);
+        if (rideRequestDTO==null){
+            throw new RuntimeException("No Request Found");
+        }
+
+        rideRequestDTO.setStatus(status);
+        repository.save(rideRequestDTOConverter(rideRequestDTO));
+    }
+
+    /**
      * Converts a list of RideRequest entities to a list of RideRequestDTOs.
      *
      * @param requests The list of RideRequest entities to convert
