@@ -1,6 +1,7 @@
 package com.car_rental.car_rental_system.service;
 
 import com.car_rental.car_rental_system.dto.RideRequestDTO;
+import com.car_rental.car_rental_system.entity.enums.RequestStatus;
 
 import java.util.List;
 
@@ -12,7 +13,7 @@ public interface RideRequestService {
 
     List<RideRequestDTO> findAll();
     
-    List<RideRequestDTO> findByState(String status);
+    List<RideRequestDTO> findByState(RequestStatus status);
 
     RideRequestDTO findById(int id);
 
