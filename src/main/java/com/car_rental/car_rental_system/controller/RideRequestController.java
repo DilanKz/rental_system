@@ -9,6 +9,10 @@ import org.springframework.web.bind.annotation.*;
  * @author Dilan
  * @created 28/02/2024 - 10:47 am
  */
+
+@RestController
+@CrossOrigin
+@RequestMapping("/request")
 public class RideRequestController {
 
     private RideRequestService requestService;
