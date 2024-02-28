@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import java.util.Date;
+import java.sql.Date;
 import java.util.List;
 
 /**
@@ -37,6 +37,6 @@ public class Vehicle {
     private String plateNumber;
 
     @Column(name = "req_dates")
-    private String reqDates;
+    private Date reqDates;
 
 }

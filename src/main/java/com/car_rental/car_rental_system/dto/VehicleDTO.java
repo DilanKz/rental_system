@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import java.sql.Date;
+
 /**
  * @author Dilan
  * @created 27/02/2024 - 05:43 pm
@@ -24,5 +26,5 @@ public class VehicleDTO {
 
     private String plateNumber;
 
-    private String reqDates;
+    private Date reqDates;
 }
