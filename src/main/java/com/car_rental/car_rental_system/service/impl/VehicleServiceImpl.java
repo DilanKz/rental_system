@@ -132,16 +132,17 @@ public class VehicleServiceImpl implements VehicleService {
      * Retrieves a vehicle by its model.
      *
      * @param model The model of the vehicle to retrieve
-     * @return VehicleDTO representing the requested vehicle, or null if not found
+     * @return List<VehicleDTO> representing the requested vehicle, or null if not found
      */
     @Override
-    public VehicleDTO findByModel(VehicleModels model) {
-        Vehicle vehicle = vehicleRepository.findByModel(model).orElse(null);
+    public List<VehicleDTO> findByModel(VehicleModels model) {
+        List<Vehicle> vehicles = vehicleRepository.findAllByModel(model);
+        List<VehicleDTO> list = new ArrayList<>();
 
-        if (vehicle == null) {
-            return null;
+        for (Vehicle vehicle : vehicles) {
+            list.add(new VehicleDTO(vehicle.getVehicleId(), vehicle.getName(), vehicle.getModel(), vehicle.getPlateNumber(), vehicle.getReqDates()));
         }
 
-        return new VehicleDTO(vehicle.getVehicleId(), vehicle.getName(), vehicle.getModel(), vehicle.getPlateNumber(), vehicle.getReqDates());
+        return list;
     }
 }
