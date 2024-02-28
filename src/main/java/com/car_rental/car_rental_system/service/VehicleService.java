@@ -1,6 +1,7 @@
 package com.car_rental.car_rental_system.service;
 
 import com.car_rental.car_rental_system.dto.VehicleDTO;
+import com.car_rental.car_rental_system.entity.enums.VehicleModels;
 
 import java.util.List;
 
@@ -20,5 +21,5 @@ public interface VehicleService {
 
     VehicleDTO findByPlateNumber(String plateNumber);
 
-    VehicleDTO findByModel(String model);
+    VehicleDTO findByModel(VehicleModels model);
 }
