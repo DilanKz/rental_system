@@ -1,5 +1,6 @@
 package com.car_rental.car_rental_system.entity;
 
+import com.car_rental.car_rental_system.entity.enums.RequestStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -42,7 +43,7 @@ public class RideRequest {
     private String destination;
 
     @Column(name = "status")
-    private String status;
+    private RequestStatus status;
 
     @ManyToOne
     @JoinColumn(name = "vehicle_id", referencedColumnName = "vehicle_id")
