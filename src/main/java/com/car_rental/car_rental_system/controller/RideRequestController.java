@@ -1,6 +1,7 @@
 package com.car_rental.car_rental_system.controller;
 
 import com.car_rental.car_rental_system.dto.RideRequestDTO;
+import com.car_rental.car_rental_system.entity.enums.RequestStatus;
 import com.car_rental.car_rental_system.service.RideRequestService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -102,7 +103,7 @@ public class RideRequestController {
      * @return ResponseEntity with status OK and a success message if the update is successful, or BAD_REQUEST if the request is invalid
      */
     @PatchMapping("/{id}")
-    public ResponseEntity updateRequestStatus(@PathVariable int id, @RequestParam String status) {
+    public ResponseEntity updateRequestStatus(@PathVariable int id, @RequestParam RequestStatus status) {
         //Update request status to approve or reject
 
         return ResponseEntity.ok("Request status has been updated successfully.");
