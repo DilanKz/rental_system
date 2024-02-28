@@ -70,7 +70,8 @@ public class RideRequestServiceImpl implements RideRequestService {
         return new RideRequestDTO(
                 request.getReqNo(),
                 request.getName(),
-                request.getDate(),
+                request.getPickupDate(),
+                request.getReturnDate(),
                 request.getPickupLocation(),
                 request.getDestination(),
                 request.getStatus(),
@@ -95,7 +96,8 @@ public class RideRequestServiceImpl implements RideRequestService {
         return new RideRequest(
                 dto.getReqNo(),
                 dto.getName(),
-                dto.getDate(),
+                dto.getPickupDate(),
+                dto.getReturnDate(),
                 dto.getPickupLocation(),
                 dto.getDestination(),
                 dto.getStatus(),
