@@ -1,5 +1,6 @@
 package com.car_rental.car_rental_system.dto;
 
+import com.car_rental.car_rental_system.entity.enums.VehicleModels;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,7 +23,7 @@ public class VehicleDTO {
 
     private String name;
 
-    private String model;
+    private VehicleModels model;
 
     private String plateNumber;
 
