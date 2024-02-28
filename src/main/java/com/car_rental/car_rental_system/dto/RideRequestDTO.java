@@ -7,6 +7,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import java.sql.Date;
+
 /**
  * @author Dilan
  * @created 27/02/2024 - 05:44 pm
@@ -22,7 +24,9 @@ public class RideRequestDTO {
 
     private String name;
 
-    private String date;
+    private Date pickupDate;
+
+    private Date returnDate;
 
     private String pickupLocation;
 
