@@ -3,6 +3,7 @@ package com.car_rental.car_rental_system.service;
 import com.car_rental.car_rental_system.dto.VehicleDTO;
 import com.car_rental.car_rental_system.entity.enums.VehicleModels;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -25,6 +26,14 @@ public interface VehicleService {
      * @return VehicleDTO representing the requested vehicle, or null if not found
      */
     VehicleDTO findById(int id);
+
+    /**
+     * Retrieves a list of vehicles available on the specified date.
+     *
+     * @param date The date for which available vehicles are to be retrieved
+     * @return List of VehicleDTO representing the vehicles available on the specified date
+     */
+    List<VehicleDTO> findAllByDate(LocalDate date);
 
     /**
      * Saves a new vehicle.
