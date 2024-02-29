@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.sql.Date;
+import java.time.LocalDate;
 
 /**
  * @author Dilan
@@ -27,5 +28,5 @@ public class VehicleDTO {
 
     private String plateNumber;
 
-    private Date reqDates;
+    private LocalDate reqDates;
 }
