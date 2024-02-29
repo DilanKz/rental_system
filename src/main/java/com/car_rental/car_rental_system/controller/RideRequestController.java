@@ -7,6 +7,8 @@ import com.car_rental.car_rental_system.service.RideRequestService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -92,20 +94,29 @@ public class RideRequestController {
 
         return ResponseEntity.ok(requestDTOS);
     }
-    @GetMapping("/locations")
-    public ResponseEntity getRequestByDates(@RequestBody List<LocationDetails> locationDetailsList){
 
-        if (locationDetailsList.size() < 2) {
-            return ResponseEntity.badRequest().build(); // Return bad request if the array size is less than 2
-        }
+    /**
+     * Retrieves ride requests filtered by the specified pickup date.
+     *
+     * @param date The pickup date to filter the ride requests
+     * @return ResponseEntity with a list of RideRequestDTO representing ride requests with the specified pickup date
+     */
+    @GetMapping("/date")
+    public ResponseEntity getRequestByDate(@RequestParam LocalDate date){
+        return ResponseEntity.ok(requestService.filterFromDate(date));
+    }
 
-        LocationDetails pickupLocation = locationDetailsList.get(0);
-        LocationDetails destination = locationDetailsList.get(1);
+    /**
+     * Retrieves ride requests filtered by the specified pickup date range.
+     *
+     * @param startDate The start date of the pickup date range
+     * @param endDate   The end date of the pickup date range
+     * @return ResponseEntity with a list of RideRequestDTO representing ride requests within the specified pickup date range
+     */
+    @GetMapping("/dates")
+    public ResponseEntity getRequestByDates(@RequestParam LocalDate startDate,@RequestParam LocalDate endDate){
 
-
-        List<RideRequestDTO> requestDTOS = requestService.findByPickupLocationAndDestination(pickupLocation, destination);
-
-        return ResponseEntity.ok(requestDTOS);
+        return ResponseEntity.ok(requestService.filterBetweenDate(startDate,endDate));
     }
 
     /**
