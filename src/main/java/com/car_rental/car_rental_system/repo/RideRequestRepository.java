@@ -47,4 +47,13 @@ public interface RideRequestRepository extends JpaRepository<RideRequest,Integer
      * @return A list of ride requests with pickup dates between the specified start and end dates
      */
     List<RideRequest> findAllByPickupDateBetween(LocalDate startDate, LocalDate endDate);
+
+    /**
+     * Retrieves all ride requests associated with the specified user ID.
+     *
+     * @param userId The ID of the user whose ride requests are to be retrieved
+     * @return A list of RideRequest entities representing the ride requests associated with the user,
+     *         or an empty list if no ride requests are found for the user ID
+     */
+    List<RideRequest> findAllByUser (int userId);
 }
