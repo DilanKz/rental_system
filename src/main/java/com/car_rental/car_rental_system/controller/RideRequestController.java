@@ -5,10 +5,10 @@ import com.car_rental.car_rental_system.entity.embedded.LocationDetails;
 import com.car_rental.car_rental_system.entity.enums.RequestStatus;
 import com.car_rental.car_rental_system.service.RideRequestService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -21,7 +21,7 @@ import java.util.List;
 @RequestMapping("/request")
 public class RideRequestController {
 
-    private RideRequestService requestService;
+    private final RideRequestService requestService;
 
     public RideRequestController(RideRequestService requestService) {
         this.requestService = requestService;
@@ -34,7 +34,8 @@ public class RideRequestController {
      * @return ResponseEntity with status OK and a list of all ride requests
      */
     @GetMapping
-    public ResponseEntity getAllRequests(){
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Object> getAllRequests() {
 
         return ResponseEntity.ok(requestService.findAll());
     }
@@ -46,11 +47,12 @@ public class RideRequestController {
      * @return ResponseEntity with status OK and the requested ride request, or NOT_FOUND if the ID is not found
      */
     @GetMapping("/{id}")
-    public ResponseEntity getOneRequest(@PathVariable int id){
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
+    public ResponseEntity<Object> getOneRequest(@PathVariable int id) {
 
         RideRequestDTO requestDTO = requestService.findById(id);
 
-        if (requestDTO==null){
+        if (requestDTO == null) {
             return ResponseEntity.badRequest().body("No Request found for the given id");
         }
 
@@ -66,7 +68,8 @@ public class RideRequestController {
      * @return ResponseEntity with status OK and a list of ride requests with the specified status
      */
     @GetMapping("/status/{status}")
-    public ResponseEntity getRequestOnStatus(@PathVariable RequestStatus status){
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Object> getRequestOnStatus(@PathVariable RequestStatus status) {
 
         List<RideRequestDTO> byState = requestService.findByState(status);
 
@@ -80,7 +83,8 @@ public class RideRequestController {
      * @return ResponseEntity with a list of RideRequestDTO representing ride requests matching the pickup and destination locations
      */
     @GetMapping("/locations")
-    public ResponseEntity getRequestByLocation(@RequestBody List<LocationDetails> locationDetailsList){
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Object> getRequestByLocation(@RequestBody List<LocationDetails> locationDetailsList) {
 
         if (locationDetailsList.size() < 2) {
             return ResponseEntity.badRequest().build(); // Return bad request if the array size is less than 2
@@ -102,7 +106,8 @@ public class RideRequestController {
      * @return ResponseEntity with a list of RideRequestDTO representing ride requests with the specified pickup date
      */
     @GetMapping("/date")
-    public ResponseEntity getRequestByDate(@RequestParam LocalDate date){
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Object> getRequestByDate(@RequestParam LocalDate date) {
         return ResponseEntity.ok(requestService.filterFromDate(date));
     }
 
@@ -114,9 +119,10 @@ public class RideRequestController {
      * @return ResponseEntity with a list of RideRequestDTO representing ride requests within the specified pickup date range
      */
     @GetMapping("/dates")
-    public ResponseEntity getRequestByDates(@RequestParam LocalDate startDate,@RequestParam LocalDate endDate){
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Object> getRequestByDates(@RequestParam LocalDate startDate, @RequestParam LocalDate endDate) {
 
-        return ResponseEntity.ok(requestService.filterBetweenDate(startDate,endDate));
+        return ResponseEntity.ok(requestService.filterBetweenDate(startDate, endDate));
     }
 
     /**
@@ -126,7 +132,8 @@ public class RideRequestController {
      * @return ResponseEntity with status OK and the newly created ride request, or BAD_REQUEST if the request is invalid
      */
     @PostMapping
-    public ResponseEntity addRequest(@RequestBody RideRequestDTO dto){
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<Object> addRequest(@RequestBody RideRequestDTO dto) {
 
         requestService.save(dto);
         return ResponseEntity.ok("Request sent successfully");
@@ -135,11 +142,13 @@ public class RideRequestController {
 
     /**
      * Updates an existing ride request.
+     *
      * @param dto The DTO containing the updated details of the ride request
      * @return ResponseEntity with status OK and the updated ride request, or BAD_REQUEST if the request is invalid
      */
     @PutMapping
-    public ResponseEntity updateRequest(@RequestBody RideRequestDTO dto){
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
+    public ResponseEntity<Object> updateRequest(@RequestBody RideRequestDTO dto) {
 
         requestService.update(dto);
         return ResponseEntity.ok("Request updated successfully");
@@ -154,9 +163,10 @@ public class RideRequestController {
      * @return ResponseEntity with status OK and a success message if the update is successful, or BAD_REQUEST if the request is invalid
      */
     @PatchMapping("/{id}")
-    public ResponseEntity updateRequestStatus(@PathVariable int id, @RequestParam RequestStatus status) {
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Object> updateRequestStatus(@PathVariable int id, @RequestParam RequestStatus status) {
         //Update request status to approve or reject
-        requestService.updateStatus(id,status);
+        requestService.updateStatus(id, status);
 
         return ResponseEntity.ok("Request status has been updated successfully.");
     }
@@ -169,9 +179,10 @@ public class RideRequestController {
      * @return ResponseEntity with a success message upon successful assignment
      */
     @PutMapping("/{id}")
-    public ResponseEntity assignVehicle(@PathVariable int id, @RequestParam int vehicleId) {
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Object> assignVehicle(@PathVariable int id, @RequestParam int vehicleId) {
         //assign vehicle to a request
-        requestService.assignVehicle(id,vehicleId);
+        requestService.assignVehicle(id, vehicleId);
 
         return ResponseEntity.ok("Vehicle assigned to the ride request successfully.");
     }
