@@ -120,13 +120,19 @@ public class RideRequestServiceImpl implements RideRequestService {
      */
     @Override
     public void assignVehicle(int id, int vehicleId) {
-        RideRequestDTO rideRequestDTO = findById(id);
-        if (rideRequestDTO==null){
+        RideRequest request = repository.findById(id).orElse(null);
+        if (request==null){
             throw new RuntimeException("No Request Found");
         }
 
-        rideRequestDTO.setVehicle(vehicleId);
-        repository.save(rideRequestDTOConverter(rideRequestDTO));
+        Vehicle vehicle = vehicleRepository.findById(vehicleId).orElse(null);
+
+        if (vehicle==null){
+            throw new RuntimeException("no vehicle found");
+        }
+
+        request.setVehicle(vehicle);
+        repository.save(request);
     }
 
     @Override
@@ -165,7 +171,7 @@ public class RideRequestServiceImpl implements RideRequestService {
                 request.getPickupLocation(),
                 request.getDestination(),
                 request.getStatus(),
-                request.getCar().getVehicleId(),
+                request.getVehicle().getVehicleId(),
                 request.getUser().getUid()
         );
     }
@@ -187,9 +193,9 @@ public class RideRequestServiceImpl implements RideRequestService {
             throw new BadCredentials("No User Found");
         }
 
-        if (vehicle==null){
+        /*if (vehicle==null){
             throw new VehicleException("No Vehicle Found");
-        }
+        }*/
 
         return new RideRequest(
                 dto.getReqNo(),
@@ -203,4 +209,6 @@ public class RideRequestServiceImpl implements RideRequestService {
                 user
         );
     }
+
+
 }
