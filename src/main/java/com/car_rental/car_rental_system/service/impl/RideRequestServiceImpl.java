@@ -60,6 +60,18 @@ public class RideRequestServiceImpl implements RideRequestService {
     }
 
     /**
+     * Retrieves all ride requests associated with the specified user ID.
+     *
+     * @param id The ID of the user whose ride requests are to be retrieved
+     * @return A list of RideRequestDTOs representing the ride requests associated with the user,
+     *         or an empty list if no ride requests are found for the user ID
+     */
+    @Override
+    public List<RideRequestDTO> findAllRequestsByUserId(int id) {
+        return rideListConverter(repository.findAllByUser(id));
+    }
+
+    /**
      * Retrieves a ride request by its ID.
      *
      * @param id The ID of the ride request to retrieve
