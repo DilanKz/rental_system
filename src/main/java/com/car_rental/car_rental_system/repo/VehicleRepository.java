@@ -17,5 +17,5 @@ public interface VehicleRepository extends JpaRepository<Vehicle,Integer> {
     Optional<Vehicle> findByPlateNumber(String plateNumber);
     List<Vehicle> findAllByPlateNumberContainingIgnoreCase(String plateNumber);
     List<Vehicle> findAllByModel(VehicleModels model);
-    List<Vehicle> findAllByReqDatesLessThanEqual(LocalDate date);
+    List<Vehicle> findAllByReqDatesLessThan(LocalDate date);
 }
