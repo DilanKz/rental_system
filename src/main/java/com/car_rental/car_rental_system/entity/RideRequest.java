@@ -61,7 +61,7 @@ public class RideRequest {
 
     @ManyToOne
     @JoinColumn(name = "vehicle_id", referencedColumnName = "vehicle_id")
-    private Vehicle car;
+    private Vehicle vehicle;
 
     @ManyToOne
     @JoinColumn(name = "uid", referencedColumnName = "uid")
