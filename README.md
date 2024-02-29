@@ -129,6 +129,12 @@ To install and run this project, follow these steps:
 - Path: http://localhost:8080/request/{id}
 - Description: Endpoint for assigning a vehicle to an existing ride request.
 
+#### Get All Requests By User ID
+- Method: GET
+- Path: http://localhost:8080/request/all/{id}
+- Description: Retrieves all ride requests by user ID with proper authorization.
+
+**Note:** The endpoints listed above work assuming the application is running on port 8080.
 
 ## Project Information
 
