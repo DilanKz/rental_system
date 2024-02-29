@@ -72,14 +72,36 @@ public class RideRequestController {
     }
 
     /**
-     * Retrieves ride requests based on the specified pickup location and destination.
+     * Retrieves ride requests based on the specified pickup and destination locations.
      *
-     * @param pickupLocation The details of the pickup location
-     * @param destination The details of the destination
-     * @return ResponseEntity with a list of RideRequestDTO representing ride requests matching the pickup location and destination
+     * @param locationDetailsList A list containing pickup location details at index 0 and destination location details at index 1
+     * @return ResponseEntity with a list of RideRequestDTO representing ride requests matching the pickup and destination locations
      */
-    @GetMapping("/date")
-    public ResponseEntity getRequestByDates(@RequestBody LocationDetails pickupLocation, @RequestBody LocationDetails destination){
+    @GetMapping("/locations")
+    public ResponseEntity getRequestByLocation(@RequestBody List<LocationDetails> locationDetailsList){
+
+        if (locationDetailsList.size() < 2) {
+            return ResponseEntity.badRequest().build(); // Return bad request if the array size is less than 2
+        }
+
+        LocationDetails pickupLocation = locationDetailsList.get(0);
+        LocationDetails destination = locationDetailsList.get(1);
+
+
+        List<RideRequestDTO> requestDTOS = requestService.findByPickupLocationAndDestination(pickupLocation, destination);
+
+        return ResponseEntity.ok(requestDTOS);
+    }
+    @GetMapping("/locations")
+    public ResponseEntity getRequestByDates(@RequestBody List<LocationDetails> locationDetailsList){
+
+        if (locationDetailsList.size() < 2) {
+            return ResponseEntity.badRequest().build(); // Return bad request if the array size is less than 2
+        }
+
+        LocationDetails pickupLocation = locationDetailsList.get(0);
+        LocationDetails destination = locationDetailsList.get(1);
+
 
         List<RideRequestDTO> requestDTOS = requestService.findByPickupLocationAndDestination(pickupLocation, destination);
 
