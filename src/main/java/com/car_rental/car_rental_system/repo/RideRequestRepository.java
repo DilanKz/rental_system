@@ -5,6 +5,7 @@ import com.car_rental.car_rental_system.entity.embedded.LocationDetails;
 import com.car_rental.car_rental_system.entity.enums.RequestStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -13,6 +14,7 @@ import java.util.List;
  */
 public interface RideRequestRepository extends JpaRepository<RideRequest,Integer> {
     List<RideRequest> findAllByStatus(RequestStatus status);
-
     List<RideRequest> findByPickupLocationAndDestination(LocationDetails pickupLocation, LocationDetails destination);
+    List<RideRequest> findAllByPickupDate(LocalDate date);
+    List<RideRequest> findAllByPickupDateBetween(LocalDate startDate, LocalDate endDate);
 }
