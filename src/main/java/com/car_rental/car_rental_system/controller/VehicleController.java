@@ -122,6 +122,13 @@ public class VehicleController {
         return ResponseEntity.ok().body(vehicleDTOS);
 
     }
+
+    /**
+     * Retrieves a list of vehicles that are available on or before the specified date.
+     *
+     * @param date The date for which available vehicles are to be retrieved
+     * @return ResponseEntity containing a list of VehicleDTO representing the available vehicles
+     */
     @GetMapping("/date")
     public ResponseEntity findAllByDate(LocalDate date) {
         List<VehicleDTO> vehicleDTOS = vehicleService.findAllByDate(date);
