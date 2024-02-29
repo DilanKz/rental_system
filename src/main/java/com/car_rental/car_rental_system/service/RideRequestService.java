@@ -29,6 +29,14 @@ public interface RideRequestService {
     List<RideRequestDTO> findByState(RequestStatus status);
 
     /**
+     * Retrieves all ride requests associated with the specified user ID.
+     *
+     * @param id The ID of the user whose ride requests are to be retrieved
+     * @return A list of RideRequestDTOs representing the ride requests associated with the user
+     */
+    List<RideRequestDTO> findAllRequestsByUserId(int id);
+
+    /**
      * Retrieves a ride request by its ID.
      *
      * @param id The ID of the ride request to retrieve
