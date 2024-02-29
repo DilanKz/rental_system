@@ -1,6 +1,7 @@
 package com.car_rental.car_rental_system.controller;
 
 import com.car_rental.car_rental_system.dto.RideRequestDTO;
+import com.car_rental.car_rental_system.dto.VehicleDTO;
 import com.car_rental.car_rental_system.entity.embedded.LocationDetails;
 import com.car_rental.car_rental_system.entity.enums.RequestStatus;
 import com.car_rental.car_rental_system.service.RideRequestService;
@@ -59,6 +60,26 @@ public class RideRequestController {
         return ResponseEntity.ok(requestDTO);
 
     }
+
+    /**
+     * Retrieves all ride requests associated with the specified user ID.
+     *
+     * @param id The ID of the user whose ride requests are to be retrieved
+     * @return ResponseEntity containing a list of RideRequestDTOs with status code 200 (OK) if requests are found,
+     *         or status code 404 (Not Found) if no requests are found
+     */
+    @GetMapping("/all/{id}")
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    public ResponseEntity<Object> allRequests(@PathVariable int id) {
+        List<RideRequestDTO> requestDTOs = requestService.findAllRequestsByUserId(id);
+
+        if (requestDTOs.isEmpty()) {
+            return ResponseEntity.notFound().build(); // Return 404 if no requests are found
+        }
+
+        return ResponseEntity.ok().body(requestDTOs); // Return requests with status code 200 (OK)
+    }
+
 
 
     /**
