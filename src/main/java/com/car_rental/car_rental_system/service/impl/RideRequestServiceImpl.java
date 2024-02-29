@@ -117,23 +117,32 @@ public class RideRequestServiceImpl implements RideRequestService {
      *
      * @param id        The ID of the ride request to update
      * @param vehicleId The ID of the vehicle to assign to the ride request
-     * @throws RuntimeException if no ride request is found with the given ID
+     * @throws VehicleException if no ride request is found with the given ID or if no vehicle is found with the given vehicleId,
+     * or if the assigned vehicle is not available at the requested date
      */
     @Override
     public void assignVehicle(int id, int vehicleId) {
         RideRequest request = repository.findById(id).orElse(null);
         if (request==null){
-            throw new RuntimeException("No Request Found");
+            throw new VehicleException("No Request Found");
         }
 
         Vehicle vehicle = vehicleRepository.findById(vehicleId).orElse(null);
 
         if (vehicle==null){
-            throw new RuntimeException("no vehicle found");
+            throw new VehicleException("no vehicle found");
+        }
+
+        vehicle.setReqDates(request.getReturnDate());
+
+
+        if (vehicle.getReqDates().isAfter(request.getPickupDate())) {
+            throw new VehicleException("This vehicle is not available at the given date");
         }
 
         request.setVehicle(vehicle);
         repository.save(request);
+        vehicleRepository.save(vehicle);
     }
 
     /**
