@@ -6,6 +6,7 @@ import com.car_rental.car_rental_system.service.VehicleService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -117,6 +118,13 @@ public class VehicleController {
         if (vehicleDTOS == null) {
             return ResponseEntity.badRequest().body("No vehicles found matching models");
         }
+
+        return ResponseEntity.ok().body(vehicleDTOS);
+
+    }
+    @GetMapping("/date")
+    public ResponseEntity findAllByDate(LocalDate date) {
+        List<VehicleDTO> vehicleDTOS = vehicleService.findAllByDate(date);
 
         return ResponseEntity.ok().body(vehicleDTOS);
 
