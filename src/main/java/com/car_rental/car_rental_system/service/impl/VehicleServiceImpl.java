@@ -69,7 +69,7 @@ public class VehicleServiceImpl implements VehicleService {
      */
     @Override
     public List<VehicleDTO> findAllByDate(LocalDate date) {
-        List<Vehicle> vehicles = vehicleRepository.findAllByReqDatesLessThanEqual(date);
+        List<Vehicle> vehicles = vehicleRepository.findAllByReqDatesLessThan(date);
         List<VehicleDTO> list = new ArrayList<>();
 
         for (Vehicle vehicle : vehicles) {
