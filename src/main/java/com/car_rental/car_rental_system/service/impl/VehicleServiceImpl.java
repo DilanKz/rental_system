@@ -8,6 +8,7 @@ import com.car_rental.car_rental_system.repo.VehicleRepository;
 import com.car_rental.car_rental_system.service.VehicleService;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,6 +59,24 @@ public class VehicleServiceImpl implements VehicleService {
         }
 
         return new VehicleDTO(vehicle.getVehicleId(), vehicle.getName(), vehicle.getModel(), vehicle.getPlateNumber(), vehicle.getReqDates());
+    }
+
+    /**
+     * Retrieves a list of vehicles available on or before the specified date.
+     *
+     * @param date The date for which available vehicles are to be retrieved
+     * @return List of VehicleDTO representing the vehicles available on or before the specified date
+     */
+    @Override
+    public List<VehicleDTO> findAllByDate(LocalDate date) {
+        List<Vehicle> vehicles = vehicleRepository.findAllByReqDatesLessThanEqual(date);
+        List<VehicleDTO> list = new ArrayList<>();
+
+        for (Vehicle vehicle : vehicles) {
+            list.add(new VehicleDTO(vehicle.getVehicleId(), vehicle.getName(), vehicle.getModel(), vehicle.getPlateNumber(), vehicle.getReqDates()));
+        }
+
+        return list;
     }
 
     /**
@@ -115,6 +134,12 @@ public class VehicleServiceImpl implements VehicleService {
         return new VehicleDTO(vehicle.getVehicleId(), vehicle.getName(), vehicle.getModel(), vehicle.getPlateNumber(), vehicle.getReqDates());
     }
 
+    /**
+     * Retrieves a list of vehicles based on a partial or complete plate number match.
+     *
+     * @param plateNumber The partial or complete plate number to search for
+     * @return List of VehicleDTO representing the vehicles matching the provided plate number
+     */
     @Override
     public List<VehicleDTO> findAllByPlateNumber(String plateNumber) {
 
