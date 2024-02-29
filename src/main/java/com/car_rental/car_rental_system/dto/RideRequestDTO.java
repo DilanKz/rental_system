@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 /**
@@ -24,11 +25,11 @@ public class RideRequestDTO {
 
     private int reqNo;
 
-    private String name;
+    private String model;
 
-    private Date pickupDate;
+    private LocalDate pickupDate;
 
-    private Date returnDate;
+    private LocalDate returnDate;
 
     private LocationDetails pickupLocation;
 
