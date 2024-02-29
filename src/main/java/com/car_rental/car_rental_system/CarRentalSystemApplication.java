@@ -18,9 +18,4 @@ public class CarRentalSystemApplication {
         return new RestTemplate();
     }
 
-    @Bean
-    public ObjectMapper objectMapper(){
-        return new ObjectMapper();
-    }
-
 }
