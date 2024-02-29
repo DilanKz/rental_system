@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 /**
@@ -29,13 +30,13 @@ public class RideRequest {
     private int reqNo;
 
     @Column(name = "vehicle_model")
-    private String name;
+    private String model;
 
     @Column(name = "pickup_dates")
-    private Date pickupDate;
+    private LocalDate pickupDate;
 
     @Column(name = "return_dates")
-    private Date returnDate;
+    private LocalDate returnDate;
 
     @Embedded
     @AttributeOverrides({
