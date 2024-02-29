@@ -133,12 +133,12 @@ public class RideRequestServiceImpl implements RideRequestService {
             throw new VehicleException("no vehicle found");
         }
 
-        vehicle.setReqDates(request.getReturnDate());
-
 
         if (vehicle.getReqDates().isAfter(request.getPickupDate())) {
             throw new VehicleException("This vehicle is not available at the given date");
         }
+
+        vehicle.setReqDates(request.getReturnDate());
 
         request.setVehicle(vehicle);
         repository.save(request);
