@@ -4,6 +4,7 @@ import com.car_rental.car_rental_system.dto.RideRequestDTO;
 import com.car_rental.car_rental_system.entity.embedded.LocationDetails;
 import com.car_rental.car_rental_system.entity.enums.RequestStatus;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -73,4 +74,21 @@ public interface RideRequestService {
      * @return List of RideRequestDTO representing ride requests matching the pickup location and destination
      */
     List<RideRequestDTO> findByPickupLocationAndDestination(LocationDetails pickupLocation, LocationDetails destination);
+
+    /**
+     * Retrieves ride requests filtered by the specified pickup date.
+     *
+     * @param date The pickup date to filter the ride requests
+     * @return List of RideRequestDTO representing ride requests with the specified pickup date
+     */
+    List<RideRequestDTO> filterFromDate(LocalDate date);
+
+    /**
+     * Retrieves ride requests filtered by the specified pickup date range.
+     *
+     * @param startDate The start date of the pickup date range
+     * @param endDate   The end date of the pickup date range
+     * @return List of RideRequestDTO representing ride requests within the specified pickup date range
+     */
+    List<RideRequestDTO> filterBetweenDate(LocalDate startDate, LocalDate endDate);
 }
