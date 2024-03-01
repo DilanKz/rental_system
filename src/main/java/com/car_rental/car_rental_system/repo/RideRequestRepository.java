@@ -1,6 +1,7 @@
 package com.car_rental.car_rental_system.repo;
 
 import com.car_rental.car_rental_system.entity.RideRequest;
+import com.car_rental.car_rental_system.entity.User;
 import com.car_rental.car_rental_system.entity.embedded.LocationDetails;
 import com.car_rental.car_rental_system.entity.enums.RequestStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -55,5 +56,5 @@ public interface RideRequestRepository extends JpaRepository<RideRequest,Integer
      * @return A list of RideRequest entities representing the ride requests associated with the user,
      *         or an empty list if no ride requests are found for the user ID
      */
-    List<RideRequest> findAllByUser (int userId);
+    List<RideRequest> findAllByUser (User userId);
 }
