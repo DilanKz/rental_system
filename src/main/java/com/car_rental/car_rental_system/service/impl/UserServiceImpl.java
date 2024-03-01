@@ -7,6 +7,8 @@ import com.car_rental.car_rental_system.exceptions.BadCredentials;
 import com.car_rental.car_rental_system.repo.AdminRepository;
 import com.car_rental.car_rental_system.repo.UserRepository;
 import com.car_rental.car_rental_system.service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -20,6 +22,7 @@ import java.util.List;
 @Service
 public class UserServiceImpl implements UserService {
 
+    private static final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
     private UserRepository userRepository;
     private AdminRepository adminRepository;
 
@@ -35,6 +38,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public List<UserDTO> findAll() {
+        log.info("Executing findAll method");
         try {
 
             List<User> users = userRepository.findAll();
@@ -44,9 +48,12 @@ public class UserServiceImpl implements UserService {
                 userDTOS.add(new UserDTO(user.getUid(), user.getName(), user.getEmail(), user.getUsername(), user.getPassword()));
             }
 
+            log.info("Found {} users", userDTOS.size());
+
             return userDTOS;
 
         } catch (Exception e) {
+            log.error("Error occurred while finding all users: {}", e.getMessage());
             throw new RuntimeException(e.getMessage());
         }
     }
@@ -59,8 +66,8 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public void save(UserDTO userDTO) {
+        log.info("Execute UserServiceImpl save: {}", userDTO.toString());
         try {
-
             UserDTO dto = findByUsername(userDTO.getUsername());
             Admin admin = adminRepository.findByUsername(userDTO.getUsername()).orElse(null);
             System.out.println(admin);
@@ -72,6 +79,7 @@ public class UserServiceImpl implements UserService {
             userRepository.save(new User(0, userDTO.getName(), userDTO.getEmail(), userDTO.getUsername(), userDTO.getPassword()));
 
         } catch (Exception e) {
+            log.error("Error in UserServiceImpl occurred while saving user: {}", e.getMessage());
             throw new RuntimeException(e.getMessage());
         }
 
@@ -85,8 +93,8 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public void update(UserDTO userDTO) {
+        log.info("Executing UserServiceImpl update method with userDTO: {}", userDTO.toString());
         try {
-
             UserDTO dto = findById(userDTO.getUid());
 
             if (dto == null) {
@@ -94,8 +102,8 @@ public class UserServiceImpl implements UserService {
             }
 
             userRepository.save(new User(userDTO.getUid(), userDTO.getName(), userDTO.getEmail(), userDTO.getUsername(), userDTO.getPassword()));
-
         } catch (Exception e) {
+            log.error("Error in UserServiceImpl occurred while updating user: {}", e.getMessage());
             throw new RuntimeException(e.getMessage());
         }
     }
@@ -108,6 +116,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public UserDTO findById(int id) {
+        log.info("Executing UserServiceImpl findById method with id: {}", id);
         try {
 
             User user = userRepository.findById(id).orElse(null);
@@ -117,6 +126,7 @@ public class UserServiceImpl implements UserService {
             return new UserDTO(user.getUid(), user.getName(), user.getEmail(), user.getUsername(), user.getPassword());
 
         } catch (Exception e) {
+            log.error("Error in UserServiceImpl occurred while finding user by id {}: {}", id, e.getMessage());
             throw new RuntimeException(e.getMessage());
         }
     }
@@ -129,6 +139,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public UserDTO findByUsername(String username) {
+        log.info("Executing UserServiceImpl findByUsername method with username: {}", username);
         try {
 
             User user = userRepository.findByUsername(username).orElse(null);
@@ -138,6 +149,7 @@ public class UserServiceImpl implements UserService {
             return new UserDTO(user.getUid(), user.getName(), user.getEmail(), user.getUsername(), user.getPassword());
 
         } catch (Exception e) {
+            log.error("Error in UserServiceImpl occurred in UserServiceImpl while finding user by username {}: {}", username, e.getMessage());
             throw new RuntimeException(e.getMessage());
         }
     }
@@ -149,11 +161,20 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public void delete(int id) {
+        log.info("Executing UserServiceImpl delete method with id: {}", id);
         try {
 
+            UserDTO dto = findById(id);
+
+            if (dto == null) {
+                throw new BadCredentials("User not found");
+            }
+
             userRepository.deleteById(id);
+            log.info("User with id {} deleted successfully", id);
 
         } catch (Exception e) {
+            log.error("Error in UserServiceImpl occurred while deleting user with id {}: {}", id, e.getMessage());
             throw new RuntimeException(e.getMessage());
         }
     }

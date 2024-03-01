@@ -12,6 +12,8 @@ import com.car_rental.car_rental_system.repo.RideRequestRepository;
 import com.car_rental.car_rental_system.repo.UserRepository;
 import com.car_rental.car_rental_system.repo.VehicleRepository;
 import com.car_rental.car_rental_system.service.RideRequestService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,6 +30,7 @@ import java.util.List;
 @Transactional
 public class RideRequestServiceImpl implements RideRequestService {
 
+    private static final Logger log = LoggerFactory.getLogger(RideRequestServiceImpl.class);
     private RideRequestRepository repository;
     private VehicleRepository vehicleRepository;
     private UserRepository userRepository;
@@ -46,11 +49,13 @@ public class RideRequestServiceImpl implements RideRequestService {
      */
     @Override
     public List<RideRequestDTO> findAll() {
+        log.info("Executing RideRequestServiceImpl findAll method");
         try {
 
             return rideListConverter(repository.findAll());
 
         } catch (Exception e) {
+            log.error("Error occurred in RideRequestServiceImpl while finding all ride requests: {}", e.getMessage());
             throw new RuntimeException(e.getMessage());
         }
     }
@@ -64,11 +69,13 @@ public class RideRequestServiceImpl implements RideRequestService {
      */
     @Override
     public List<RideRequestDTO> findByState(RequestStatus status) {
+        log.info("Executing RideRequestServiceImpl findByState method with status: {}", status);
         try {
 
             return rideListConverter(repository.findAllByStatus(status));
 
         } catch (Exception e) {
+            log.error("Error occurred in RideRequestServiceImpl while finding ride requests by status: {}", e.getMessage());
             throw new RuntimeException(e.getMessage());
         }
     }
@@ -83,6 +90,7 @@ public class RideRequestServiceImpl implements RideRequestService {
      */
     @Override
     public List<RideRequestDTO> findAllRequestsByUserId(int id) {
+        log.info("Executing RideRequestServiceImpl findAllRequestsByUserId method with id: {}", id);
         try {
             User user = userRepository.findById(id).orElse(null);
 
@@ -93,6 +101,7 @@ public class RideRequestServiceImpl implements RideRequestService {
             return rideListConverter(repository.findAllByUser(user));
 
         } catch (Exception e) {
+            log.error("Error occurred in RideRequestServiceImpl while finding all ride requests by user id: {}", id, e);
             throw new RuntimeException(e.getMessage());
         }
     }
@@ -106,6 +115,7 @@ public class RideRequestServiceImpl implements RideRequestService {
      */
     @Override
     public RideRequestDTO findById(int id) {
+        log.info("Executing RideRequestServiceImpl findById method with id: {}", id);
         try {
 
             RideRequest request = repository.findById(id).orElse(null);
@@ -115,6 +125,7 @@ public class RideRequestServiceImpl implements RideRequestService {
             return rideRequestConverter(request);
 
         } catch (Exception e) {
+            log.error("Error occurred in RideRequestServiceImpl while finding ride request by id: {}", id, e);
             throw new RuntimeException(e.getMessage());
         }
     }
@@ -127,11 +138,13 @@ public class RideRequestServiceImpl implements RideRequestService {
      */
     @Override
     public void save(RideRequestDTO dto) {
+        log.info("Executing RideRequestServiceImpl save method with dto: {}", dto);
         try {
 
             repository.save(rideRequestDTOConverter(dto));
 
         } catch (Exception e) {
+            log.error("Error occurred in RideRequestServiceImpl while saving ride request: {}", e.getMessage());
             throw new RuntimeException(e.getMessage());
         }
     }
@@ -144,11 +157,13 @@ public class RideRequestServiceImpl implements RideRequestService {
      */
     @Override
     public void update(RideRequestDTO dto) {
+        log.info("Executing RideRequestServiceImpl update method with dto: {}", dto);
         try {
 
             repository.save(rideRequestDTOConverter(dto));
 
         } catch (Exception e) {
+            log.error("Error occurred in RideRequestServiceImpl while updating ride request: {}", e.getMessage());
             throw new RuntimeException(e.getMessage());
         }
     }
@@ -163,6 +178,7 @@ public class RideRequestServiceImpl implements RideRequestService {
      */
     @Override
     public void updateStatus(int id, RequestStatus status) {
+        log.info("Executing RideRequestServiceImpl updateStatus method with id: {}, status: {}", id, status);
         try {
 
             RideRequestDTO rideRequestDTO = findById(id);
@@ -174,6 +190,7 @@ public class RideRequestServiceImpl implements RideRequestService {
             repository.save(rideRequestDTOConverter(rideRequestDTO));
 
         } catch (Exception e) {
+            log.error("Error occurred in RideRequestServiceImpl while updating ride request status: {}", e.getMessage());
             throw new RuntimeException(e.getMessage());
         }
     }
@@ -189,7 +206,7 @@ public class RideRequestServiceImpl implements RideRequestService {
      */
     @Override
     public void assignVehicle(int id, int vehicleId) {
-
+        log.info("Executing RideRequestServiceImpl assignVehicle method with id: {}, vehicleId: {}", id, vehicleId);
         try {
 
             RideRequest request = repository.findById(id).orElse(null);
@@ -215,6 +232,7 @@ public class RideRequestServiceImpl implements RideRequestService {
             vehicleRepository.save(vehicle);
 
         } catch (Exception e) {
+            log.error("Error occurred in RideRequestServiceImpl while assigning vehicle to ride request: {}", e.getMessage());
             throw new RuntimeException(e.getMessage());
         }
     }
@@ -229,11 +247,13 @@ public class RideRequestServiceImpl implements RideRequestService {
      */
     @Override
     public List<RideRequestDTO> findByPickupLocationAndDestination(LocationDetails pickupLocation, LocationDetails destination) {
+        log.info("Executing RideRequestServiceImpl findByPickupLocationAndDestination method with pickupLocation: {} and destination: {}", pickupLocation, destination);
         try {
 
             return rideListConverter(repository.findByPickupLocationAndDestination(pickupLocation, destination));
 
         } catch (Exception e) {
+            log.error("Error occurred in RideRequestServiceImpl while finding ride requests by pickup location and destination: {}", e.getMessage());
             throw new RuntimeException(e.getMessage());
         }
     }
@@ -247,12 +267,14 @@ public class RideRequestServiceImpl implements RideRequestService {
      */
     @Override
     public List<RideRequestDTO> filterFromDate(LocalDate date) {
+        log.info("Executing RideRequestServiceImpl filterFromDate method with date: {}", date);
         try {
 
             List<RideRequest> allByPickupDate = repository.findAllByPickupDate(date);
             return rideListConverter(allByPickupDate);
 
         } catch (Exception e) {
+            log.error("Error occurred in RideRequestServiceImpl while filtering ride requests by pickup date: {}", e.getMessage());
             throw new RuntimeException(e.getMessage());
         }
     }
@@ -266,12 +288,13 @@ public class RideRequestServiceImpl implements RideRequestService {
      */
     @Override
     public List<RideRequestDTO> filterBetweenDate(LocalDate startDate, LocalDate endDate) {
+        log.info("Executing RideRequestServiceImpl filterBetweenDate method with startDate: {} and endDate: {}", startDate, endDate);
         try {
 
             List<RideRequest> allByPickupDate = repository.findAllByPickupDateBetween(startDate, endDate);
             return rideListConverter(allByPickupDate);
-
         } catch (Exception e) {
+            log.error("Error occurred in RideRequestServiceImpl while filtering ride requests by pickup date range: {}", e.getMessage());
             throw new RuntimeException(e.getMessage());
         }
 
@@ -285,6 +308,7 @@ public class RideRequestServiceImpl implements RideRequestService {
      * @throws RuntimeException if an error occurs during the retrieval process
      */
     private List<RideRequestDTO> rideListConverter(List<RideRequest> requests) {
+        log.info("Executing RideRequestServiceImpl rideListConverter method");
         try {
 
             List<RideRequestDTO> requestDTOS = new ArrayList<>();
@@ -296,6 +320,7 @@ public class RideRequestServiceImpl implements RideRequestService {
             return requestDTOS;
 
         } catch (Exception e) {
+            log.error("Error occurred in RideRequestServiceImpl while converting ride request list: {}", e.getMessage());
             throw new RuntimeException(e.getMessage());
         }
     }
@@ -308,7 +333,7 @@ public class RideRequestServiceImpl implements RideRequestService {
      * @throws RuntimeException if an error occurs during the retrieval process
      */
     private RideRequestDTO rideRequestConverter(RideRequest request) {
-
+        log.info("Executing RideRequestServiceImpl  rideRequestConverter method with request: {}", request);
         try {
 
             RideRequestDTO rideRequestDTO = new RideRequestDTO();
@@ -331,6 +356,7 @@ public class RideRequestServiceImpl implements RideRequestService {
             return rideRequestDTO;
 
         } catch (Exception e) {
+            log.error("Error occurred in RideRequestServiceImpl while converting ride request to DTO: {}", e.getMessage());
             throw new RuntimeException(e.getMessage());
         }
     }
@@ -346,6 +372,7 @@ public class RideRequestServiceImpl implements RideRequestService {
      * @throws RuntimeException if an error occurs during the retrieval process
      */
     private RideRequest rideRequestDTOConverter(RideRequestDTO dto) {
+        log.info("Converting DTO to ride request in RideRequestServiceImpl");
         try {
 
             User user = userRepository.findById(dto.getUser()).orElse(null);
@@ -372,6 +399,7 @@ public class RideRequestServiceImpl implements RideRequestService {
             );
 
         } catch (Exception e) {
+            log.error("Error occurred in RideRequestServiceImpl while converting DTO to ride request: {}", e.getMessage());
             throw new RuntimeException(e.getMessage());
         }
     }

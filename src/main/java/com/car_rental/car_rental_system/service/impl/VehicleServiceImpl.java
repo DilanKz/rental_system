@@ -6,6 +6,8 @@ import com.car_rental.car_rental_system.entity.enums.VehicleModels;
 import com.car_rental.car_rental_system.exceptions.VehicleException;
 import com.car_rental.car_rental_system.repo.VehicleRepository;
 import com.car_rental.car_rental_system.service.VehicleService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -20,6 +22,7 @@ import java.util.List;
 @Service
 public class VehicleServiceImpl implements VehicleService {
 
+    private static final Logger log = LoggerFactory.getLogger(VehicleServiceImpl.class);
     private VehicleRepository vehicleRepository;
 
     public VehicleServiceImpl(VehicleRepository vehicleRepository) {
@@ -34,6 +37,7 @@ public class VehicleServiceImpl implements VehicleService {
      */
     @Override
     public List<VehicleDTO> findAll() {
+        log.info("Executing VehicleServiceImpl findAll method");
         try {
 
             List<Vehicle> vehicles = vehicleRepository.findAll();
@@ -46,6 +50,7 @@ public class VehicleServiceImpl implements VehicleService {
             return list;
 
         } catch (Exception e) {
+            log.error("Error occurred in VehicleServiceImpl findAll method: {}", e.getMessage());
             throw new RuntimeException(e.getMessage());
         }
     }
@@ -59,6 +64,7 @@ public class VehicleServiceImpl implements VehicleService {
      */
     @Override
     public VehicleDTO findById(int id) {
+        log.info("Executing VehicleServiceImpl findById method with id: {}", id);
         try {
 
             Vehicle vehicle = vehicleRepository.findById(id).orElse(null);
@@ -70,6 +76,7 @@ public class VehicleServiceImpl implements VehicleService {
             return new VehicleDTO(vehicle.getVehicleId(), vehicle.getName(), vehicle.getModel(), vehicle.getPlateNumber(), vehicle.getReqDates());
 
         } catch (Exception e) {
+            log.error("Error occurred in VehicleServiceImpl findById method with id {}: {}", id, e.getMessage());
             throw new RuntimeException(e.getMessage());
         }
     }
@@ -83,6 +90,7 @@ public class VehicleServiceImpl implements VehicleService {
      */
     @Override
     public List<VehicleDTO> findAllByDate(LocalDate date) {
+        log.info("Executing VehicleServiceImpl findAllByDate method with date: {}", date);
         try {
 
             List<Vehicle> vehicles = vehicleRepository.findAllByReqDatesLessThan(date);
@@ -95,6 +103,7 @@ public class VehicleServiceImpl implements VehicleService {
             return list;
 
         } catch (Exception e) {
+            log.error("Error occurred in VehicleServiceImpl findAllByDate method with date {}: {}", date, e.getMessage());
             throw new RuntimeException(e.getMessage());
         }
     }
@@ -108,18 +117,21 @@ public class VehicleServiceImpl implements VehicleService {
      */
     @Override
     public void save(VehicleDTO dto) {
+        log.info("Executing VehicleServiceImpl save method with VehicleDTO: {}", dto);
         try {
 
             VehicleDTO vehicleDTO = findByPlateNumber(dto.getPlateNumber());
 
             //check if there is another vehicle exist by the same plate number if exist then throw an exception
             if (vehicleDTO != null) {
+                log.info("Vehicle with plate number {} already exists in VehicleServiceImpl save method", dto.getPlateNumber());
                 throw new VehicleException("Vehicle in this plate number is already exists");
             }
 
             vehicleRepository.save(new Vehicle(dto.getVehicleId(), dto.getName(), dto.getModel(), dto.getPlateNumber(), dto.getReqDates()));
 
         } catch (Exception e) {
+            log.error("Error occurred in VehicleServiceImpl save method: {}", e.getMessage());
             throw new RuntimeException(e.getMessage());
         }
     }
@@ -133,6 +145,7 @@ public class VehicleServiceImpl implements VehicleService {
      */
     @Override
     public void update(VehicleDTO dto) {
+        log.info("Executing VehicleServiceImpl update method with VehicleDTO: {}", dto);
         try {
 
             VehicleDTO vehicleDTO = findByPlateNumber(dto.getPlateNumber());
@@ -145,6 +158,7 @@ public class VehicleServiceImpl implements VehicleService {
             vehicleRepository.save(new Vehicle(dto.getVehicleId(), dto.getName(), dto.getModel(), dto.getPlateNumber(), dto.getReqDates()));
 
         } catch (Exception e) {
+            log.error("Error occurred in VehicleServiceImpl update method: {}", e.getMessage());
             throw new RuntimeException(e.getMessage());
         }
     }
@@ -158,6 +172,7 @@ public class VehicleServiceImpl implements VehicleService {
      */
     @Override
     public VehicleDTO findByPlateNumber(String plateNumber) {
+        log.info("Executing VehicleServiceImpl findByPlateNumber method with plateNumber: {}", plateNumber);
         try {
 
             Vehicle vehicle = vehicleRepository.findByPlateNumber(plateNumber).orElse(null);
@@ -169,6 +184,7 @@ public class VehicleServiceImpl implements VehicleService {
             return new VehicleDTO(vehicle.getVehicleId(), vehicle.getName(), vehicle.getModel(), vehicle.getPlateNumber(), vehicle.getReqDates());
 
         } catch (Exception e) {
+            log.error("Error occurred in VehicleServiceImpl findByPlateNumber method with plateNumber {}: {}", plateNumber, e.getMessage());
             throw new RuntimeException(e.getMessage());
         }
     }
@@ -182,6 +198,7 @@ public class VehicleServiceImpl implements VehicleService {
      */
     @Override
     public List<VehicleDTO> findAllByPlateNumber(String plateNumber) {
+        log.info("Executing VehicleServiceImpl findAllByPlateNumber method with plateNumber: {}", plateNumber);
         try {
 
             List<Vehicle> vehicles = vehicleRepository.findAllByPlateNumberContainingIgnoreCase(plateNumber);
@@ -194,6 +211,7 @@ public class VehicleServiceImpl implements VehicleService {
             return list;
 
         } catch (Exception e) {
+            log.error("Error occurred in VehicleServiceImpl findAllByPlateNumber method with plateNumber {}: {}", plateNumber, e.getMessage());
             throw new RuntimeException(e.getMessage());
         }
     }
@@ -207,6 +225,7 @@ public class VehicleServiceImpl implements VehicleService {
      */
     @Override
     public List<VehicleDTO> findByModel(VehicleModels model) {
+        log.info("Executing VehicleServiceImpl findByModel method with model: {}", model);
         try {
 
             List<Vehicle> vehicles = vehicleRepository.findAllByModel(model);
@@ -219,6 +238,7 @@ public class VehicleServiceImpl implements VehicleService {
             return list;
 
         } catch (Exception e) {
+            log.error("Error occurred in VehicleServiceImpl findByModel method with model {}: {}", model, e.getMessage());
             throw new RuntimeException(e.getMessage());
         }
     }

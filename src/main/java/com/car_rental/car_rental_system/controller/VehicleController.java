@@ -137,6 +137,7 @@ public class VehicleController {
      * @return ResponseEntity containing a list of VehicleDTO representing the available vehicles
      */
     @GetMapping("/date")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity findAllByDate(LocalDate date) {
         List<VehicleDTO> vehicleDTOS = vehicleService.findAllByDate(date);
 
