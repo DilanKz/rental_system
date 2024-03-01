@@ -1,5 +1,6 @@
 package com.car_rental.car_rental_system.controller;
 
+import com.car_rental.car_rental_system.dto.ResponseDTO;
 import com.car_rental.car_rental_system.dto.UserDTO;
 import com.car_rental.car_rental_system.service.UserService;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/user")
 public class UserController {
 
-    private UserService userService;
+    private final UserService userService;
 
     public UserController(UserService userService) {
         this.userService = userService;
@@ -29,9 +30,9 @@ public class UserController {
      */
     @PutMapping
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<String> updateAccount(@RequestBody UserDTO userDTO){
+    public ResponseEntity<ResponseDTO> updateAccount(@RequestBody UserDTO userDTO){
 
         userService.update(userDTO);
-        return ResponseEntity.ok("User updated");
+        return ResponseEntity.ok(new ResponseDTO(true,"User updated"));
     }
 }

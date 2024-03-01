@@ -2,6 +2,7 @@ package com.car_rental.car_rental_system.controller;
 
 import com.car_rental.car_rental_system.dto.AuthenticationRequest;
 import com.car_rental.car_rental_system.dto.AuthenticationResponse;
+import com.car_rental.car_rental_system.dto.ResponseDTO;
 import com.car_rental.car_rental_system.dto.UserDTO;
 import com.car_rental.car_rental_system.service.JwtService;
 import com.car_rental.car_rental_system.service.UserService;
@@ -59,9 +60,9 @@ public class AuthController {
      * @return ResponseEntity with a success message upon successful registration
      */
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody UserDTO dto){
+    public ResponseEntity<ResponseDTO> register(@RequestBody UserDTO dto){
         userService.save(dto);
-        return ResponseEntity.ok("User Registered");
+        return ResponseEntity.ok(new ResponseDTO(true,"User saved"));
     }
 
 }

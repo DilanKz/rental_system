@@ -1,5 +1,6 @@
 package com.car_rental.car_rental_system.advisor;
 
+import com.car_rental.car_rental_system.dto.ResponseDTO;
 import com.car_rental.car_rental_system.exceptions.BadCredentials;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,18 +19,18 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class AppWideExceptionHandler {
 
     @ExceptionHandler({RuntimeException.class})
-    public ResponseEntity handleServerException(RuntimeException e) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+    public ResponseEntity<ResponseDTO> handleServerException(RuntimeException e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDTO(false,e.getMessage()));
     }
 
     @ExceptionHandler({BadCredentials.class})
-    public ResponseEntity handleAuthException(BadCredentials e){
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+    public ResponseEntity<ResponseDTO> handleAuthException(BadCredentials e){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDTO(false,e.getMessage()));
     }
 
     @ExceptionHandler({UsernameNotFoundException.class})
-    public ResponseEntity handleCredentialsException(UsernameNotFoundException e){
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+    public ResponseEntity<ResponseDTO> handleCredentialsException(UsernameNotFoundException e){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDTO(false,e.getMessage()));
     }
 
 }

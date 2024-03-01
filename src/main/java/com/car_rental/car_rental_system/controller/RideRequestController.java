@@ -1,7 +1,7 @@
 package com.car_rental.car_rental_system.controller;
 
+import com.car_rental.car_rental_system.dto.ResponseDTO;
 import com.car_rental.car_rental_system.dto.RideRequestDTO;
-import com.car_rental.car_rental_system.dto.VehicleDTO;
 import com.car_rental.car_rental_system.entity.embedded.LocationDetails;
 import com.car_rental.car_rental_system.entity.enums.RequestStatus;
 import com.car_rental.car_rental_system.service.RideRequestService;
@@ -36,9 +36,8 @@ public class RideRequestController {
      */
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Object> getAllRequests() {
-
-        return ResponseEntity.ok(requestService.findAll());
+    public ResponseEntity<ResponseDTO> getAllRequests() {
+        return ResponseEntity.ok(new ResponseDTO(true,requestService.findAll()));
     }
 
     /**
@@ -49,16 +48,15 @@ public class RideRequestController {
      */
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN','USER')")
-    public ResponseEntity<Object> getOneRequest(@PathVariable int id) {
+    public ResponseEntity<ResponseDTO> getOneRequest(@PathVariable int id) {
 
         RideRequestDTO requestDTO = requestService.findById(id);
 
         if (requestDTO == null) {
-            return ResponseEntity.badRequest().body("No Request found for the given id");
+            return ResponseEntity.badRequest().body(new ResponseDTO(false,"Bad Request"));
         }
 
-        return ResponseEntity.ok(requestDTO);
-
+        return ResponseEntity.ok(new ResponseDTO(true,requestDTO));
     }
 
     /**
@@ -70,14 +68,14 @@ public class RideRequestController {
      */
     @GetMapping("/all/{id}")
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
-    public ResponseEntity<Object> allRequests(@PathVariable int id) {
+    public ResponseEntity<ResponseDTO> allRequests(@PathVariable int id) {
         List<RideRequestDTO> requestDTOs = requestService.findAllRequestsByUserId(id);
 
         if (requestDTOs.isEmpty()) {
-            return ResponseEntity.notFound().build(); // Return 404 if no requests are found
+            return ResponseEntity.badRequest().body(new ResponseDTO(false,"Bad Request"));
         }
 
-        return ResponseEntity.ok().body(requestDTOs); // Return requests with status code 200 (OK)
+        return ResponseEntity.ok(new ResponseDTO(true,requestDTOs));
     }
 
 
@@ -90,11 +88,8 @@ public class RideRequestController {
      */
     @GetMapping("/status/{status}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Object> getRequestOnStatus(@PathVariable RequestStatus status) {
-
-        List<RideRequestDTO> byState = requestService.findByState(status);
-
-        return ResponseEntity.ok(byState);
+    public ResponseEntity<ResponseDTO> getRequestOnStatus(@PathVariable RequestStatus status) {
+        return ResponseEntity.ok(new ResponseDTO(true,requestService.findByState(status)));
     }
 
     /**
@@ -105,19 +100,17 @@ public class RideRequestController {
      */
     @GetMapping("/locations")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Object> getRequestByLocation(@RequestBody List<LocationDetails> locationDetailsList) {
+    public ResponseEntity<ResponseDTO> getRequestByLocation(@RequestBody List<LocationDetails> locationDetailsList) {
 
         if (locationDetailsList.size() < 2) {
-            return ResponseEntity.badRequest().build(); // Return bad request if the array size is less than 2
+            return ResponseEntity.badRequest().body(new ResponseDTO(false,"Bad Request"));
         }
 
         LocationDetails pickupLocation = locationDetailsList.get(0);
         LocationDetails destination = locationDetailsList.get(1);
 
 
-        List<RideRequestDTO> requestDTOS = requestService.findByPickupLocationAndDestination(pickupLocation, destination);
-
-        return ResponseEntity.ok(requestDTOS);
+        return ResponseEntity.ok(new ResponseDTO(true,requestService.findByPickupLocationAndDestination(pickupLocation, destination)));
     }
 
     /**
@@ -128,8 +121,8 @@ public class RideRequestController {
      */
     @GetMapping("/date")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Object> getRequestByDate(@RequestParam LocalDate date) {
-        return ResponseEntity.ok(requestService.filterFromDate(date));
+    public ResponseEntity<ResponseDTO> getRequestByDate(@RequestParam LocalDate date) {
+        return ResponseEntity.ok(new ResponseDTO(true,requestService.filterFromDate(date)));
     }
 
     /**
@@ -141,9 +134,9 @@ public class RideRequestController {
      */
     @GetMapping("/dates")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Object> getRequestByDates(@RequestParam LocalDate startDate, @RequestParam LocalDate endDate) {
+    public ResponseEntity<ResponseDTO> getRequestByDates(@RequestParam LocalDate startDate, @RequestParam LocalDate endDate) {
 
-        return ResponseEntity.ok(requestService.filterBetweenDate(startDate, endDate));
+        return ResponseEntity.ok(new ResponseDTO(true,requestService.filterBetweenDate(startDate, endDate)));
     }
 
     /**
@@ -154,10 +147,10 @@ public class RideRequestController {
      */
     @PostMapping
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<Object> addRequest(@RequestBody RideRequestDTO dto) {
+    public ResponseEntity<ResponseDTO> addRequest(@RequestBody RideRequestDTO dto) {
 
         requestService.save(dto);
-        return ResponseEntity.ok("Request sent successfully");
+        return ResponseEntity.ok(new ResponseDTO(true,"Request sent successfully"));
     }
 
 
@@ -169,10 +162,10 @@ public class RideRequestController {
      */
     @PutMapping
     @PreAuthorize("hasAnyRole('ADMIN','USER')")
-    public ResponseEntity<Object> updateRequest(@RequestBody RideRequestDTO dto) {
+    public ResponseEntity<ResponseDTO> updateRequest(@RequestBody RideRequestDTO dto) {
 
         requestService.update(dto);
-        return ResponseEntity.ok("Request updated successfully");
+        return ResponseEntity.ok(new ResponseDTO(true,"Request updated successfully"));
     }
 
 
@@ -185,11 +178,11 @@ public class RideRequestController {
      */
     @PatchMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Object> updateRequestStatus(@PathVariable int id, @RequestParam RequestStatus status) {
+    public ResponseEntity<ResponseDTO> updateRequestStatus(@PathVariable int id, @RequestParam RequestStatus status) {
         //Update request status to approve or reject
         requestService.updateStatus(id, status);
 
-        return ResponseEntity.ok("Request status has been updated successfully.");
+        return ResponseEntity.ok(new ResponseDTO(true,"Request status has been updated successfully"));
     }
 
     /**
@@ -201,11 +194,11 @@ public class RideRequestController {
      */
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Object> assignVehicle(@PathVariable int id, @RequestParam int vehicleId) {
+    public ResponseEntity<ResponseDTO> assignVehicle(@PathVariable int id, @RequestParam int vehicleId) {
         //assign vehicle to a request
         requestService.assignVehicle(id, vehicleId);
 
-        return ResponseEntity.ok("Vehicle assigned to the ride request successfully.");
+        return ResponseEntity.ok(new ResponseDTO(true,"Vehicle assigned to the ride request successfully."));
     }
 
 }

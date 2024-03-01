@@ -1,5 +1,6 @@
 package com.car_rental.car_rental_system.controller;
 
+import com.car_rental.car_rental_system.dto.ResponseDTO;
 import com.car_rental.car_rental_system.dto.VehicleDTO;
 import com.car_rental.car_rental_system.entity.enums.VehicleModels;
 import com.car_rental.car_rental_system.service.VehicleService;
@@ -20,7 +21,7 @@ import java.util.List;
 @RequestMapping("/vehicle")
 public class VehicleController {
 
-    private VehicleService vehicleService;
+    private final VehicleService vehicleService;
 
     public VehicleController(VehicleService vehicleService) {
         this.vehicleService = vehicleService;
@@ -34,10 +35,10 @@ public class VehicleController {
      */
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<String> save(@RequestBody VehicleDTO dto) {
+    public ResponseEntity<ResponseDTO> save(@RequestBody VehicleDTO dto) {
         vehicleService.save(dto);
 
-        return ResponseEntity.ok("Vehicle is successfully saved");
+        return ResponseEntity.ok(new ResponseDTO(true,"Vehicle is successfully saved"));
     }
 
     /**
@@ -48,9 +49,9 @@ public class VehicleController {
      */
     @PutMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<String> update(@RequestBody VehicleDTO dto) {
+    public ResponseEntity<ResponseDTO> update(@RequestBody VehicleDTO dto) {
         vehicleService.update(dto);
-        return ResponseEntity.ok("Vehicle is successfully updated");
+        return ResponseEntity.ok(new ResponseDTO(true,"Vehicle is successfully updated"));
     }
 
     /**
@@ -60,15 +61,8 @@ public class VehicleController {
      */
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity findAll() {
-        List<VehicleDTO> list = vehicleService.findAll();
-
-        if (list == null) {
-            return ResponseEntity.badRequest().body("Empty list");
-        }
-
-        return ResponseEntity.ok().body(list);
-
+    public ResponseEntity<ResponseDTO> findAll() {
+        return ResponseEntity.ok(new ResponseDTO(true,vehicleService.findAll()));
     }
 
     /**
@@ -79,14 +73,14 @@ public class VehicleController {
      */
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity getOne(@PathVariable int id) {
+    public ResponseEntity<ResponseDTO> getOne(@PathVariable int id) {
         VehicleDTO vehicleDTO = vehicleService.findById(id);
 
         if (vehicleDTO == null) {
-            return ResponseEntity.badRequest().body("No vehicle found in this id");
+            return ResponseEntity.badRequest().body(new ResponseDTO(false,"Bad Request"));
         }
 
-        return ResponseEntity.ok().body(vehicleDTO);
+        return ResponseEntity.ok(new ResponseDTO(true,vehicleDTO));
 
     }
 
@@ -99,14 +93,14 @@ public class VehicleController {
      */
     @GetMapping("/platenumber")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity findAllByPlateNumber(String plateNumber) {
+    public ResponseEntity<ResponseDTO> findAllByPlateNumber(String plateNumber) {
         List<VehicleDTO> vehicleDTOS = vehicleService.findAllByPlateNumber(plateNumber);
 
         if (vehicleDTOS == null) {
-            return ResponseEntity.badRequest().body("No vehicles found matching the specified plate number");
+            return ResponseEntity.badRequest().body(new ResponseDTO(false,"Bad Request"));
         }
 
-        return ResponseEntity.ok().body(vehicleDTOS);
+        return ResponseEntity.ok(new ResponseDTO(true,vehicleDTOS));
 
     }
 
@@ -119,14 +113,14 @@ public class VehicleController {
      */
     @GetMapping("/model")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity findAllByModel(VehicleModels models) {
+    public ResponseEntity<ResponseDTO> findAllByModel(VehicleModels models) {
         List<VehicleDTO> vehicleDTOS = vehicleService.findByModel(models);
 
         if (vehicleDTOS == null) {
-            return ResponseEntity.badRequest().body("No vehicles found matching models");
+            return ResponseEntity.badRequest().body(new ResponseDTO(false,"Bad Request"));
         }
 
-        return ResponseEntity.ok().body(vehicleDTOS);
+        return ResponseEntity.ok(new ResponseDTO(true,vehicleDTOS));
 
     }
 
@@ -138,10 +132,10 @@ public class VehicleController {
      */
     @GetMapping("/date")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity findAllByDate(LocalDate date) {
+    public ResponseEntity<ResponseDTO> findAllByDate(LocalDate date) {
         List<VehicleDTO> vehicleDTOS = vehicleService.findAllByDate(date);
 
-        return ResponseEntity.ok().body(vehicleDTOS);
+        return ResponseEntity.ok(new ResponseDTO(true,vehicleDTOS));
 
     }
 }
