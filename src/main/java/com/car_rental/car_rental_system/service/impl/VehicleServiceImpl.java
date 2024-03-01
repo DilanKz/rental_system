@@ -30,18 +30,24 @@ public class VehicleServiceImpl implements VehicleService {
      * Retrieves all vehicles.
      *
      * @return List of VehicleDTO representing all vehicles
+     * @throws RuntimeException if an error occurs during the retrieval process
      */
     @Override
     public List<VehicleDTO> findAll() {
+        try {
 
-        List<Vehicle> vehicles = vehicleRepository.findAll();
-        List<VehicleDTO> list = new ArrayList<>();
+            List<Vehicle> vehicles = vehicleRepository.findAll();
+            List<VehicleDTO> list = new ArrayList<>();
 
-        for (Vehicle vehicle : vehicles) {
-            list.add(new VehicleDTO(vehicle.getVehicleId(), vehicle.getName(), vehicle.getModel(), vehicle.getPlateNumber(), vehicle.getReqDates()));
+            for (Vehicle vehicle : vehicles) {
+                list.add(new VehicleDTO(vehicle.getVehicleId(), vehicle.getName(), vehicle.getModel(), vehicle.getPlateNumber(), vehicle.getReqDates()));
+            }
+
+            return list;
+
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
         }
-
-        return list;
     }
 
     /**
@@ -49,16 +55,23 @@ public class VehicleServiceImpl implements VehicleService {
      *
      * @param id The ID of the vehicle to retrieve
      * @return VehicleDTO representing the requested vehicle, or null if not found
+     * @throws RuntimeException if an error occurs during the retrieval process
      */
     @Override
     public VehicleDTO findById(int id) {
-        Vehicle vehicle = vehicleRepository.findById(id).orElse(null);
+        try {
 
-        if (vehicle == null) {
-            return null;
+            Vehicle vehicle = vehicleRepository.findById(id).orElse(null);
+
+            if (vehicle == null) {
+                return null;
+            }
+
+            return new VehicleDTO(vehicle.getVehicleId(), vehicle.getName(), vehicle.getModel(), vehicle.getPlateNumber(), vehicle.getReqDates());
+
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
         }
-
-        return new VehicleDTO(vehicle.getVehicleId(), vehicle.getName(), vehicle.getModel(), vehicle.getPlateNumber(), vehicle.getReqDates());
     }
 
     /**
@@ -66,17 +79,24 @@ public class VehicleServiceImpl implements VehicleService {
      *
      * @param date The date for which available vehicles are to be retrieved
      * @return List of VehicleDTO representing the vehicles available on or before the specified date
+     * @throws RuntimeException if an error occurs during the retrieval process
      */
     @Override
     public List<VehicleDTO> findAllByDate(LocalDate date) {
-        List<Vehicle> vehicles = vehicleRepository.findAllByReqDatesLessThan(date);
-        List<VehicleDTO> list = new ArrayList<>();
+        try {
 
-        for (Vehicle vehicle : vehicles) {
-            list.add(new VehicleDTO(vehicle.getVehicleId(), vehicle.getName(), vehicle.getModel(), vehicle.getPlateNumber(), vehicle.getReqDates()));
+            List<Vehicle> vehicles = vehicleRepository.findAllByReqDatesLessThan(date);
+            List<VehicleDTO> list = new ArrayList<>();
+
+            for (Vehicle vehicle : vehicles) {
+                list.add(new VehicleDTO(vehicle.getVehicleId(), vehicle.getName(), vehicle.getModel(), vehicle.getPlateNumber(), vehicle.getReqDates()));
+            }
+
+            return list;
+
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
         }
-
-        return list;
     }
 
     /**
@@ -84,18 +104,24 @@ public class VehicleServiceImpl implements VehicleService {
      *
      * @param dto The VehicleDTO representing the vehicle to be saved
      * @throws VehicleException If a vehicle with the same plate number already exists
+     * @throws RuntimeException if an error occurs during the retrieval process
      */
     @Override
     public void save(VehicleDTO dto) {
+        try {
 
-        VehicleDTO vehicleDTO = findByPlateNumber(dto.getPlateNumber());
+            VehicleDTO vehicleDTO = findByPlateNumber(dto.getPlateNumber());
 
-        //check if there is another vehicle exist by the same plate number if exist then throw an exception
-        if (vehicleDTO != null) {
-            throw new VehicleException("Vehicle in this plate number is already exists");
+            //check if there is another vehicle exist by the same plate number if exist then throw an exception
+            if (vehicleDTO != null) {
+                throw new VehicleException("Vehicle in this plate number is already exists");
+            }
+
+            vehicleRepository.save(new Vehicle(dto.getVehicleId(), dto.getName(), dto.getModel(), dto.getPlateNumber(), dto.getReqDates()));
+
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
         }
-
-        vehicleRepository.save(new Vehicle(dto.getVehicleId(), dto.getName(), dto.getModel(), dto.getPlateNumber(), dto.getReqDates()));
     }
 
     /**
@@ -103,18 +129,24 @@ public class VehicleServiceImpl implements VehicleService {
      *
      * @param dto The VehicleDTO representing the updated vehicle information
      * @throws VehicleException If the vehicle to update is not found
+     * @throws RuntimeException if an error occurs during the retrieval process
      */
     @Override
     public void update(VehicleDTO dto) {
+        try {
 
-        VehicleDTO vehicleDTO = findByPlateNumber(dto.getPlateNumber());
+            VehicleDTO vehicleDTO = findByPlateNumber(dto.getPlateNumber());
 
-        //check if there is another vehicle exist by the same plate number if exist then throw an exception
-        if (vehicleDTO == null) {
-            throw new VehicleException("No vehicle is found for update");
+            //check if there is another vehicle exist by the same plate number if exist then throw an exception
+            if (vehicleDTO == null) {
+                throw new VehicleException("No vehicle is found for update");
+            }
+
+            vehicleRepository.save(new Vehicle(dto.getVehicleId(), dto.getName(), dto.getModel(), dto.getPlateNumber(), dto.getReqDates()));
+
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
         }
-
-        vehicleRepository.save(new Vehicle(dto.getVehicleId(), dto.getName(), dto.getModel(), dto.getPlateNumber(), dto.getReqDates()));
     }
 
     /**
@@ -122,16 +154,23 @@ public class VehicleServiceImpl implements VehicleService {
      *
      * @param plateNumber The plate number of the vehicle to retrieve
      * @return VehicleDTO representing the requested vehicle, or null if not found
+     * @throws RuntimeException if an error occurs during the retrieval process
      */
     @Override
     public VehicleDTO findByPlateNumber(String plateNumber) {
-        Vehicle vehicle = vehicleRepository.findByPlateNumber(plateNumber).orElse(null);
+        try {
 
-        if (vehicle == null) {
-            return null;
+            Vehicle vehicle = vehicleRepository.findByPlateNumber(plateNumber).orElse(null);
+
+            if (vehicle == null) {
+                return null;
+            }
+
+            return new VehicleDTO(vehicle.getVehicleId(), vehicle.getName(), vehicle.getModel(), vehicle.getPlateNumber(), vehicle.getReqDates());
+
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
         }
-
-        return new VehicleDTO(vehicle.getVehicleId(), vehicle.getName(), vehicle.getModel(), vehicle.getPlateNumber(), vehicle.getReqDates());
     }
 
     /**
@@ -139,18 +178,24 @@ public class VehicleServiceImpl implements VehicleService {
      *
      * @param plateNumber The partial or complete plate number to search for
      * @return List of VehicleDTO representing the vehicles matching the provided plate number
+     * @throws RuntimeException if an error occurs during the retrieval process
      */
     @Override
     public List<VehicleDTO> findAllByPlateNumber(String plateNumber) {
+        try {
 
-        List<Vehicle> vehicles = vehicleRepository.findAllByPlateNumberContainingIgnoreCase(plateNumber);
-        List<VehicleDTO> list = new ArrayList<>();
+            List<Vehicle> vehicles = vehicleRepository.findAllByPlateNumberContainingIgnoreCase(plateNumber);
+            List<VehicleDTO> list = new ArrayList<>();
 
-        for (Vehicle vehicle : vehicles) {
-            list.add(new VehicleDTO(vehicle.getVehicleId(), vehicle.getName(), vehicle.getModel(), vehicle.getPlateNumber(), vehicle.getReqDates()));
+            for (Vehicle vehicle : vehicles) {
+                list.add(new VehicleDTO(vehicle.getVehicleId(), vehicle.getName(), vehicle.getModel(), vehicle.getPlateNumber(), vehicle.getReqDates()));
+            }
+
+            return list;
+
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
         }
-
-        return list;
     }
 
     /**
@@ -158,16 +203,23 @@ public class VehicleServiceImpl implements VehicleService {
      *
      * @param model The model of the vehicle to retrieve
      * @return List<VehicleDTO> representing the requested vehicle, or null if not found
+     * @throws RuntimeException if an error occurs during the retrieval process
      */
     @Override
     public List<VehicleDTO> findByModel(VehicleModels model) {
-        List<Vehicle> vehicles = vehicleRepository.findAllByModel(model);
-        List<VehicleDTO> list = new ArrayList<>();
+        try {
 
-        for (Vehicle vehicle : vehicles) {
-            list.add(new VehicleDTO(vehicle.getVehicleId(), vehicle.getName(), vehicle.getModel(), vehicle.getPlateNumber(), vehicle.getReqDates()));
+            List<Vehicle> vehicles = vehicleRepository.findAllByModel(model);
+            List<VehicleDTO> list = new ArrayList<>();
+
+            for (Vehicle vehicle : vehicles) {
+                list.add(new VehicleDTO(vehicle.getVehicleId(), vehicle.getName(), vehicle.getModel(), vehicle.getPlateNumber(), vehicle.getReqDates()));
+            }
+
+            return list;
+
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
         }
-
-        return list;
     }
 }

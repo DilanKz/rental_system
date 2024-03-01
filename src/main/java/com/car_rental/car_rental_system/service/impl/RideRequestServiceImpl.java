@@ -42,10 +42,17 @@ public class RideRequestServiceImpl implements RideRequestService {
      * Retrieves all ride requests.
      *
      * @return List of RideRequestDTO representing all ride requests
+     * @throws RuntimeException if an error occurs during the retrieval process
      */
     @Override
     public List<RideRequestDTO> findAll() {
-        return rideListConverter(repository.findAll());
+        try {
+
+            return rideListConverter(repository.findAll());
+
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
     }
 
     /**
@@ -53,10 +60,17 @@ public class RideRequestServiceImpl implements RideRequestService {
      *
      * @param status The status of the ride requests to retrieve
      * @return List of RideRequestDTO representing ride requests with the specified status
+     * @throws RuntimeException if an error occurs during the retrieval process
      */
     @Override
     public List<RideRequestDTO> findByState(RequestStatus status) {
-        return rideListConverter(repository.findAllByStatus(status));
+        try {
+
+            return rideListConverter(repository.findAllByStatus(status));
+
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
     }
 
     /**
@@ -64,11 +78,18 @@ public class RideRequestServiceImpl implements RideRequestService {
      *
      * @param id The ID of the user whose ride requests are to be retrieved
      * @return A list of RideRequestDTOs representing the ride requests associated with the user,
-     *         or an empty list if no ride requests are found for the user ID
+     * or an empty list if no ride requests are found for the user ID
+     * @throws RuntimeException if an error occurs during the retrieval process
      */
     @Override
     public List<RideRequestDTO> findAllRequestsByUserId(int id) {
-        return rideListConverter(repository.findAllByUser(id));
+        try {
+
+            return rideListConverter(repository.findAllByUser(id));
+
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
     }
 
     /**
@@ -76,34 +97,55 @@ public class RideRequestServiceImpl implements RideRequestService {
      *
      * @param id The ID of the ride request to retrieve
      * @return RideRequestDTO representing the requested ride request, or null if not found
+     * @throws RuntimeException if an error occurs during the retrieval process
      */
     @Override
     public RideRequestDTO findById(int id) {
-        RideRequest request = repository.findById(id).orElse(null);
+        try {
 
-        if (request==null) return null;
+            RideRequest request = repository.findById(id).orElse(null);
 
-        return rideRequestConverter(request);
+            if (request == null) return null;
+
+            return rideRequestConverter(request);
+
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
     }
 
     /**
      * Saves a new ride request.
      *
      * @param dto The RideRequestDTO representing the ride request to be saved
+     * @throws RuntimeException if an error occurs during the retrieval process
      */
     @Override
     public void save(RideRequestDTO dto) {
-        repository.save(rideRequestDTOConverter(dto));
+        try {
+
+            repository.save(rideRequestDTOConverter(dto));
+
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
     }
 
     /**
      * Updates an existing ride request.
      *
      * @param dto The RideRequestDTO representing the updated ride request information
+     * @throws RuntimeException if an error occurs during the retrieval process
      */
     @Override
     public void update(RideRequestDTO dto) {
-        repository.save(rideRequestDTOConverter(dto));
+        try {
+
+            repository.save(rideRequestDTOConverter(dto));
+
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
     }
 
     /**
@@ -111,17 +153,24 @@ public class RideRequestServiceImpl implements RideRequestService {
      *
      * @param id     The ID of the ride request to update
      * @param status The new status to set for the ride request
-     * @throws RuntimeException if no ride request is found with the given ID
+     * @throws RuntimeException if no ride request is found with the given ID or
+     *                          error occurs during the retrieval process
      */
     @Override
     public void updateStatus(int id, RequestStatus status) {
-        RideRequestDTO rideRequestDTO = findById(id);
-        if (rideRequestDTO==null){
-            throw new RuntimeException("No Request Found");
-        }
+        try {
 
-        rideRequestDTO.setStatus(status);
-        repository.save(rideRequestDTOConverter(rideRequestDTO));
+            RideRequestDTO rideRequestDTO = findById(id);
+            if (rideRequestDTO == null) {
+                throw new RuntimeException("No Request Found");
+            }
+
+            rideRequestDTO.setStatus(status);
+            repository.save(rideRequestDTOConverter(rideRequestDTO));
+
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
     }
 
     /**
@@ -130,31 +179,39 @@ public class RideRequestServiceImpl implements RideRequestService {
      * @param id        The ID of the ride request to update
      * @param vehicleId The ID of the vehicle to assign to the ride request
      * @throws VehicleException if no ride request is found with the given ID or if no vehicle is found with the given vehicleId,
-     * or if the assigned vehicle is not available at the requested date
+     *                          or if the assigned vehicle is not available at the requested date
+     * @throws RuntimeException if an error occurs during the retrieval process
      */
     @Override
     public void assignVehicle(int id, int vehicleId) {
-        RideRequest request = repository.findById(id).orElse(null);
-        if (request==null){
-            throw new VehicleException("No Request Found");
+
+        try {
+
+            RideRequest request = repository.findById(id).orElse(null);
+            if (request == null) {
+                throw new VehicleException("No Request Found");
+            }
+
+            Vehicle vehicle = vehicleRepository.findById(vehicleId).orElse(null);
+
+            if (vehicle == null) {
+                throw new VehicleException("no vehicle found");
+            }
+
+
+            if (vehicle.getReqDates().isAfter(request.getPickupDate())) {
+                throw new VehicleException("This vehicle is not available at the given date");
+            }
+
+            vehicle.setReqDates(request.getReturnDate());
+
+            request.setVehicle(vehicle);
+            repository.save(request);
+            vehicleRepository.save(vehicle);
+
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
         }
-
-        Vehicle vehicle = vehicleRepository.findById(vehicleId).orElse(null);
-
-        if (vehicle==null){
-            throw new VehicleException("no vehicle found");
-        }
-
-
-        if (vehicle.getReqDates().isAfter(request.getPickupDate())) {
-            throw new VehicleException("This vehicle is not available at the given date");
-        }
-
-        vehicle.setReqDates(request.getReturnDate());
-
-        request.setVehicle(vehicle);
-        repository.save(request);
-        vehicleRepository.save(vehicle);
     }
 
     /**
@@ -163,10 +220,17 @@ public class RideRequestServiceImpl implements RideRequestService {
      * @param pickupLocation The pickup location details
      * @param destination    The destination location details
      * @return List of RideRequestDTO representing ride requests matching the specified pickup location and destination
+     * @throws RuntimeException if an error occurs during the retrieval process
      */
     @Override
     public List<RideRequestDTO> findByPickupLocationAndDestination(LocationDetails pickupLocation, LocationDetails destination) {
-        return rideListConverter(repository.findByPickupLocationAndDestination(pickupLocation,destination));
+        try {
+
+            return rideListConverter(repository.findByPickupLocationAndDestination(pickupLocation, destination));
+
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
     }
 
     /**
@@ -174,11 +238,18 @@ public class RideRequestServiceImpl implements RideRequestService {
      *
      * @param date The pickup date to filter the ride requests
      * @return List of RideRequestDTO representing ride requests with the specified pickup date
+     * @throws RuntimeException if an error occurs during the retrieval process
      */
     @Override
     public List<RideRequestDTO> filterFromDate(LocalDate date) {
-        List<RideRequest> allByPickupDate = repository.findAllByPickupDate(date);
-        return rideListConverter(allByPickupDate);
+        try {
+
+            List<RideRequest> allByPickupDate = repository.findAllByPickupDate(date);
+            return rideListConverter(allByPickupDate);
+
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
     }
 
     /**
@@ -189,9 +260,16 @@ public class RideRequestServiceImpl implements RideRequestService {
      * @return List of RideRequestDTO representing ride requests within the specified pickup date range
      */
     @Override
-    public List<RideRequestDTO> filterBetweenDate(LocalDate startDate,LocalDate endDate){
-        List<RideRequest> allByPickupDate = repository.findAllByPickupDateBetween(startDate,endDate);
-        return rideListConverter(allByPickupDate);
+    public List<RideRequestDTO> filterBetweenDate(LocalDate startDate, LocalDate endDate) {
+        try {
+
+            List<RideRequest> allByPickupDate = repository.findAllByPickupDateBetween(startDate, endDate);
+            return rideListConverter(allByPickupDate);
+
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+
     }
 
     /**
@@ -199,15 +277,22 @@ public class RideRequestServiceImpl implements RideRequestService {
      *
      * @param requests The list of RideRequest entities to convert
      * @return List of RideRequestDTO representing the converted ride requests
+     * @throws RuntimeException if an error occurs during the retrieval process
      */
-    private List<RideRequestDTO> rideListConverter(List<RideRequest> requests){
-        List<RideRequestDTO> requestDTOS =new ArrayList<>();
+    private List<RideRequestDTO> rideListConverter(List<RideRequest> requests) {
+        try {
 
-        for (RideRequest request : requests) {
-            requestDTOS.add(rideRequestConverter(request));
+            List<RideRequestDTO> requestDTOS = new ArrayList<>();
+
+            for (RideRequest request : requests) {
+                requestDTOS.add(rideRequestConverter(request));
+            }
+
+            return requestDTOS;
+
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
         }
-
-        return requestDTOS;
     }
 
     /**
@@ -215,26 +300,34 @@ public class RideRequestServiceImpl implements RideRequestService {
      *
      * @param request The RideRequest entity to convert
      * @return RideRequestDTO representing the converted ride request
+     * @throws RuntimeException if an error occurs during the retrieval process
      */
     private RideRequestDTO rideRequestConverter(RideRequest request) {
-        RideRequestDTO rideRequestDTO = new RideRequestDTO();
+
+        try {
+
+            RideRequestDTO rideRequestDTO = new RideRequestDTO();
 
 
-        Vehicle vehicle = request.getVehicle();
-        if (vehicle != null) {
-            rideRequestDTO.setVehicle(vehicle.getVehicleId());
+            Vehicle vehicle = request.getVehicle();
+            if (vehicle != null) {
+                rideRequestDTO.setVehicle(vehicle.getVehicleId());
+            }
+
+            rideRequestDTO.setReqNo(request.getReqNo());
+            rideRequestDTO.setModel(request.getModel());
+            rideRequestDTO.setPickupDate(request.getPickupDate());
+            rideRequestDTO.setReturnDate(request.getReturnDate());
+            rideRequestDTO.setPickupLocation(request.getPickupLocation());
+            rideRequestDTO.setDestination(request.getDestination());
+            rideRequestDTO.setStatus(request.getStatus());
+            rideRequestDTO.setUser(request.getUser().getUid());
+
+            return rideRequestDTO;
+
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
         }
-
-        rideRequestDTO.setReqNo(request.getReqNo());
-        rideRequestDTO.setModel(request.getModel());
-        rideRequestDTO.setPickupDate(request.getPickupDate());
-        rideRequestDTO.setReturnDate(request.getReturnDate());
-        rideRequestDTO.setPickupLocation(request.getPickupLocation());
-        rideRequestDTO.setDestination(request.getDestination());
-        rideRequestDTO.setStatus(request.getStatus());
-        rideRequestDTO.setUser(request.getUser().getUid());
-
-        return rideRequestDTO;
     }
 
 
@@ -243,33 +336,39 @@ public class RideRequestServiceImpl implements RideRequestService {
      *
      * @param dto The RideRequestDTO to convert
      * @return RideRequest representing the converted ride request
-     * @throws BadCredentials If the user or vehicle associated with the ride request is not found
+     * @throws BadCredentials   If the user or vehicle associated with the ride request is not found
      * @throws VehicleException If the vehicle associated with the ride request is not found
+     * @throws RuntimeException if an error occurs during the retrieval process
      */
-    private RideRequest rideRequestDTOConverter(RideRequestDTO dto){
+    private RideRequest rideRequestDTOConverter(RideRequestDTO dto) {
+        try {
 
-        User user = userRepository.findById(dto.getUser()).orElse(null);
-        Vehicle vehicle = vehicleRepository.findById(dto.getVehicle()).orElse(null);
+            User user = userRepository.findById(dto.getUser()).orElse(null);
+            Vehicle vehicle = vehicleRepository.findById(dto.getVehicle()).orElse(null);
 
-        if (user==null){
-            throw new BadCredentials("No User Found");
-        }
+            if (user == null) {
+                throw new BadCredentials("No User Found");
+            }
 
         /*if (vehicle==null){
             throw new VehicleException("No Vehicle Found");
         }*/
 
-        return new RideRequest(
-                dto.getReqNo(),
-                dto.getModel(),
-                dto.getPickupDate(),
-                dto.getReturnDate(),
-                dto.getPickupLocation(),
-                dto.getDestination(),
-                dto.getStatus(),
-                vehicle,
-                user
-        );
+            return new RideRequest(
+                    dto.getReqNo(),
+                    dto.getModel(),
+                    dto.getPickupDate(),
+                    dto.getReturnDate(),
+                    dto.getPickupLocation(),
+                    dto.getDestination(),
+                    dto.getStatus(),
+                    vehicle,
+                    user
+            );
+
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
     }
 
 

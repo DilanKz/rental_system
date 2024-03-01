@@ -35,14 +35,20 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public List<UserDTO> findAll() {
-        List<User> users = userRepository.findAll();
-        List<UserDTO> userDTOS = new ArrayList<>();
+        try {
 
-        for (User user : users) {
-            userDTOS.add(new UserDTO(user.getUid(), user.getName(), user.getEmail(), user.getUsername(), user.getPassword()));
+            List<User> users = userRepository.findAll();
+            List<UserDTO> userDTOS = new ArrayList<>();
+
+            for (User user : users) {
+                userDTOS.add(new UserDTO(user.getUid(), user.getName(), user.getEmail(), user.getUsername(), user.getPassword()));
+            }
+
+            return userDTOS;
+
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
         }
-
-        return userDTOS;
     }
 
     /**
@@ -53,15 +59,21 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public void save(UserDTO userDTO) {
-        UserDTO dto = findByUsername(userDTO.getUsername());
-        Admin admin = adminRepository.findByUsername(userDTO.getUsername()).orElse(null);
-        System.out.println(admin);
+        try {
 
-        if (dto != null || admin!=null) {
-            throw new BadCredentials("Username is not available");
+            UserDTO dto = findByUsername(userDTO.getUsername());
+            Admin admin = adminRepository.findByUsername(userDTO.getUsername()).orElse(null);
+            System.out.println(admin);
+
+            if (dto != null || admin != null) {
+                throw new BadCredentials("Username is not available");
+            }
+
+            userRepository.save(new User(0, userDTO.getName(), userDTO.getEmail(), userDTO.getUsername(), userDTO.getPassword()));
+
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
         }
-
-        userRepository.save(new User(0, userDTO.getName(), userDTO.getEmail(), userDTO.getUsername(), userDTO.getPassword()));
 
     }
 
@@ -73,13 +85,19 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public void update(UserDTO userDTO) {
-        UserDTO dto = findById(userDTO.getUid());
+        try {
 
-        if (dto == null) {
-            throw new BadCredentials("User not found");
+            UserDTO dto = findById(userDTO.getUid());
+
+            if (dto == null) {
+                throw new BadCredentials("User not found");
+            }
+
+            userRepository.save(new User(userDTO.getUid(), userDTO.getName(), userDTO.getEmail(), userDTO.getUsername(), userDTO.getPassword()));
+
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
         }
-
-        userRepository.save(new User(userDTO.getUid(), userDTO.getName(), userDTO.getEmail(), userDTO.getUsername(), userDTO.getPassword()));
     }
 
     /**
@@ -90,12 +108,17 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public UserDTO findById(int id) {
+        try {
 
-        User user = userRepository.findById(id).orElse(null);
+            User user = userRepository.findById(id).orElse(null);
 
-        if (user == null) return null;
+            if (user == null) return null;
 
-        return new UserDTO(user.getUid(), user.getName(), user.getEmail(), user.getUsername(), user.getPassword());
+            return new UserDTO(user.getUid(), user.getName(), user.getEmail(), user.getUsername(), user.getPassword());
+
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
     }
 
     /**
@@ -106,11 +129,17 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public UserDTO findByUsername(String username) {
-        User user = userRepository.findByUsername(username).orElse(null);
+        try {
 
-        if (user == null) return null;
+            User user = userRepository.findByUsername(username).orElse(null);
 
-        return new UserDTO(user.getUid(), user.getName(), user.getEmail(), user.getUsername(), user.getPassword());
+            if (user == null) return null;
+
+            return new UserDTO(user.getUid(), user.getName(), user.getEmail(), user.getUsername(), user.getPassword());
+
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
     }
 
     /**
@@ -120,6 +149,12 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public void delete(int id) {
-        userRepository.deleteById(id);
+        try {
+
+            userRepository.deleteById(id);
+
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
     }
 }
