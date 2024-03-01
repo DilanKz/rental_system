@@ -84,8 +84,13 @@ public class RideRequestServiceImpl implements RideRequestService {
     @Override
     public List<RideRequestDTO> findAllRequestsByUserId(int id) {
         try {
+            User user = userRepository.findById(id).orElse(null);
 
-            return rideListConverter(repository.findAllByUser(id));
+            if (user==null){
+                throw new BadCredentials("No user in this id");
+            }
+
+            return rideListConverter(repository.findAllByUser(user));
 
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
