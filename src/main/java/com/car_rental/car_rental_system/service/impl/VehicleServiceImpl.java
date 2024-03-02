@@ -148,11 +148,16 @@ public class VehicleServiceImpl implements VehicleService {
         log.info("Executing VehicleServiceImpl update method with VehicleDTO: {}", dto);
         try {
 
-            VehicleDTO vehicleDTO = findByPlateNumber(dto.getPlateNumber());
+            VehicleDTO vehicleDTO = findById(dto.getVehicleId());
+            VehicleDTO byPlateNumber = findByPlateNumber(dto.getPlateNumber());
 
             //check if there is another vehicle exist by the same plate number if exist then throw an exception
             if (vehicleDTO == null) {
                 throw new VehicleException("No vehicle is found for update");
+            }
+
+            if (byPlateNumber!=null){
+                throw new VehicleException("A vehicle exists in this plate number");
             }
 
             vehicleRepository.save(new Vehicle(dto.getVehicleId(), dto.getName(), dto.getModel(), dto.getPlateNumber(), dto.getReqDates()));
