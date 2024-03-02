@@ -159,6 +159,20 @@ public class RideRequestServiceImpl implements RideRequestService {
     public void update(RideRequestDTO dto) {
         log.info("Executing RideRequestServiceImpl update method with dto: {}", dto);
         try {
+            RideRequest rideRequest = repository.findById(dto.getReqNo()).orElse(null);
+
+            if (rideRequest==null){
+                log.error("Error occurred in RideRequestServiceImpl while updating ride request " +
+                        "couldn't find ride request in this id:{}",dto.getReqNo());
+                throw new RuntimeException("No request in this id");
+            }
+
+            dto.setStatus(rideRequest.getStatus());
+            dto.setUser(rideRequest.getUser().getUid());
+
+            if (rideRequest.getVehicle()!=null){
+                dto.setVehicle(rideRequest.getVehicle().getVehicleId());
+            }
 
             repository.save(rideRequestDTOConverter(dto));
 
