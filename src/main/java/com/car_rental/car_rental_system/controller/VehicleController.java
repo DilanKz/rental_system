@@ -62,7 +62,7 @@ public class VehicleController {
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ResponseDTO> findAll() {
-        return ResponseEntity.ok(new ResponseDTO(true,vehicleService.findAll()));
+        return ResponseEntity.ok(new ResponseDTO(true, "Retrieving all vehicles", vehicleService.findAll()));
     }
 
     /**
@@ -80,7 +80,7 @@ public class VehicleController {
             return ResponseEntity.badRequest().body(new ResponseDTO(false,"Bad Request"));
         }
 
-        return ResponseEntity.ok(new ResponseDTO(true,vehicleDTO));
+        return ResponseEntity.ok(new ResponseDTO(true, "Retrieving vehicle by ID", vehicleDTO));
 
     }
 
@@ -100,7 +100,7 @@ public class VehicleController {
             return ResponseEntity.badRequest().body(new ResponseDTO(false,"Bad Request"));
         }
 
-        return ResponseEntity.ok(new ResponseDTO(true,vehicleDTOS));
+        return ResponseEntity.ok(new ResponseDTO(true, "Retrieving vehicles by plate number", vehicleDTOS));
 
     }
 
@@ -120,7 +120,7 @@ public class VehicleController {
             return ResponseEntity.badRequest().body(new ResponseDTO(false,"Bad Request"));
         }
 
-        return ResponseEntity.ok(new ResponseDTO(true,vehicleDTOS));
+        return ResponseEntity.ok(new ResponseDTO(true, "Retrieving vehicles by model", vehicleDTOS));
 
     }
 
@@ -135,7 +135,7 @@ public class VehicleController {
     public ResponseEntity<ResponseDTO> findAllByDate(LocalDate date) {
         List<VehicleDTO> vehicleDTOS = vehicleService.findAllByDate(date);
 
-        return ResponseEntity.ok(new ResponseDTO(true,vehicleDTOS));
+        return ResponseEntity.ok(new ResponseDTO(true, "Retrieving available vehicles by date", vehicleDTOS));
 
     }
 }
