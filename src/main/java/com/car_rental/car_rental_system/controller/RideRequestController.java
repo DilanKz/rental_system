@@ -37,7 +37,7 @@ public class RideRequestController {
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ResponseDTO> getAllRequests() {
-        return ResponseEntity.ok(new ResponseDTO(true,requestService.findAll()));
+        return ResponseEntity.ok(new ResponseDTO(true, "Retrieving all ride requests", requestService.findAll()));
     }
 
     /**
@@ -56,7 +56,7 @@ public class RideRequestController {
             return ResponseEntity.badRequest().body(new ResponseDTO(false,"Bad Request"));
         }
 
-        return ResponseEntity.ok(new ResponseDTO(true,requestDTO));
+        return ResponseEntity.ok(new ResponseDTO(true, "Retrieving ride request by ID", requestDTO));
     }
 
     /**
@@ -75,7 +75,7 @@ public class RideRequestController {
             return ResponseEntity.badRequest().body(new ResponseDTO(false,"Bad Request"));
         }
 
-        return ResponseEntity.ok(new ResponseDTO(true,requestDTOs));
+        return ResponseEntity.ok(new ResponseDTO(true, "Retrieving all ride requests for the user", requestDTOs));
     }
 
 
@@ -89,7 +89,7 @@ public class RideRequestController {
     @GetMapping("/status/{status}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ResponseDTO> getRequestOnStatus(@PathVariable RequestStatus status) {
-        return ResponseEntity.ok(new ResponseDTO(true,requestService.findByState(status)));
+        return ResponseEntity.ok(new ResponseDTO(true, "Retrieving ride requests by status", requestService.findByState(status)));
     }
 
     /**
@@ -110,7 +110,7 @@ public class RideRequestController {
         LocationDetails destination = locationDetailsList.get(1);
 
 
-        return ResponseEntity.ok(new ResponseDTO(true,requestService.findByPickupLocationAndDestination(pickupLocation, destination)));
+        return ResponseEntity.ok(new ResponseDTO(true, "Retrieving ride requests by locations", requestService.findByPickupLocationAndDestination(pickupLocation, destination)));
     }
 
     /**
@@ -122,7 +122,7 @@ public class RideRequestController {
     @GetMapping("/date")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ResponseDTO> getRequestByDate(@RequestParam LocalDate date) {
-        return ResponseEntity.ok(new ResponseDTO(true,requestService.filterFromDate(date)));
+        return ResponseEntity.ok(new ResponseDTO(true, "Retrieving ride requests by pickup date", requestService.filterFromDate(date)));
     }
 
     /**
@@ -136,7 +136,7 @@ public class RideRequestController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ResponseDTO> getRequestByDates(@RequestParam LocalDate startDate, @RequestParam LocalDate endDate) {
 
-        return ResponseEntity.ok(new ResponseDTO(true,requestService.filterBetweenDate(startDate, endDate)));
+        return ResponseEntity.ok(new ResponseDTO(true,"Retrieving ride requests by pickup date range",requestService.filterBetweenDate(startDate, endDate)));
     }
 
     /**
