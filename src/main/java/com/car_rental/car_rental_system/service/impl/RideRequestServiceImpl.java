@@ -12,6 +12,7 @@ import com.car_rental.car_rental_system.repo.RideRequestRepository;
 import com.car_rental.car_rental_system.repo.UserRepository;
 import com.car_rental.car_rental_system.repo.VehicleRepository;
 import com.car_rental.car_rental_system.service.RideRequestService;
+import com.car_rental.car_rental_system.util.SendMail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -34,6 +35,7 @@ public class RideRequestServiceImpl implements RideRequestService {
     private RideRequestRepository repository;
     private VehicleRepository vehicleRepository;
     private UserRepository userRepository;
+    private SendMail sendMail;
 
     public RideRequestServiceImpl(RideRequestRepository repository, VehicleRepository vehicleRepository, UserRepository userRepository) {
         this.repository = repository;
@@ -201,7 +203,18 @@ public class RideRequestServiceImpl implements RideRequestService {
             }
 
             rideRequestDTO.setStatus(status);
-            repository.save(rideRequestDTOConverter(rideRequestDTO));
+            RideRequest request = rideRequestDTOConverter(rideRequestDTO);
+            repository.save(request);
+
+
+            String userEmail = request.getUser().getEmail();
+            String plateNumber = request.getVehicle().getPlateNumber();
+            String emailText = "<p>Your request has been approved with the following vehicle:</p>" +
+                    "<p><strong>Car Plate Number:</strong> " + plateNumber + "</p>";
+
+            sendMail.sendEmail(userEmail, emailText);
+
+
 
         } catch (Exception e) {
             log.error("Error occurred in RideRequestServiceImpl while updating ride request status: {}", e.getMessage());
