@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Service
 @Log4j2
 public class SendMail {
     private JavaMailSender mailSender;
