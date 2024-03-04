@@ -22,6 +22,13 @@ public class SendMail {
 
     private JavaMailSender mailSender;
 
+    /**
+     * Sends an email with the given recipient email address and text.
+     *
+     * @param to   The recipient email address.
+     * @param text The email text.
+     */
+
     public void sendEmail(String to, String text) {
         if (to == null || text == null) {
             log.error("Failed to send email empty text or mail");
