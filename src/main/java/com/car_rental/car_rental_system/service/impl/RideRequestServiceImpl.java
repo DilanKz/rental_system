@@ -35,13 +35,11 @@ public class RideRequestServiceImpl implements RideRequestService {
     private RideRequestRepository repository;
     private VehicleRepository vehicleRepository;
     private UserRepository userRepository;
-    private SendMail sendMail;
 
-    public RideRequestServiceImpl(RideRequestRepository repository, VehicleRepository vehicleRepository, UserRepository userRepository, SendMail sendMail) {
+    public RideRequestServiceImpl(RideRequestRepository repository, VehicleRepository vehicleRepository, UserRepository userRepository) {
         this.repository = repository;
         this.vehicleRepository = vehicleRepository;
         this.userRepository = userRepository;
-        this.sendMail = sendMail;
     }
 
     /**
