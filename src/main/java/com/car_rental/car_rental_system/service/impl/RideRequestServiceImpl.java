@@ -209,11 +209,13 @@ public class RideRequestServiceImpl implements RideRequestService {
 
             String userEmail = request.getUser().getEmail();
             String plateNumber = request.getVehicle().getPlateNumber();
+            String carName = request.getVehicle().getName();
+
             String emailText = "<p>Your request has been approved with the following vehicle:</p>" +
-                    "<p><strong>Car Plate Number:</strong> " + plateNumber + "</p>";
+                    "<p><strong>Car:</strong> " + carName + "</p>" +
+                    "<p><strong>Plate Number:</strong> " + plateNumber + "</p>";
 
             sendMail.sendEmail(userEmail, emailText);
-
 
 
         } catch (Exception e) {
