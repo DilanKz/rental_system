@@ -2,6 +2,8 @@ package com.car_rental.car_rental_system.util;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import lombok.extern.log4j.Log4j;
+import lombok.extern.log4j.Log4j2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.mail.SimpleMailMessage;
@@ -16,10 +18,8 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 @NoArgsConstructor
 @Service
+@Log4j2
 public class SendMail {
-
-    private static final Logger log = LoggerFactory.getLogger(SendMail.class);
-
     private JavaMailSender mailSender;
 
     /**
