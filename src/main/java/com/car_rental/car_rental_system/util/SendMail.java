@@ -2,10 +2,7 @@ package com.car_rental.car_rental_system.util;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import lombok.extern.log4j.Log4j;
 import lombok.extern.log4j.Log4j2;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -28,7 +25,6 @@ public class SendMail {
      * @param to   The recipient email address.
      * @param text The email text.
      */
-
     public void sendEmail(String to, String text) {
         if (to == null || text == null) {
             log.error("Failed to send email empty text or mail");
