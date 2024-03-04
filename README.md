@@ -19,6 +19,15 @@ To install and run this project, follow these steps:
 5. Access the application in your web browser at `http://localhost:8080`.
 
 
+## Documentation
+
+### Postman Collection
+
+To explore and test the endpoints of this API, you can use the Postman collection provided in this repository.
+
+[![Run in Postman](https://run.pstmn.io/button.svg)](https://documenter.getpostman.com/view/28181150/2sA2rGwKua)
+
+
 ## Endpoints
 
 ### Authentication
