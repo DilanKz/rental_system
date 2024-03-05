@@ -35,11 +35,13 @@ public class RideRequestServiceImpl implements RideRequestService {
     private RideRequestRepository repository;
     private VehicleRepository vehicleRepository;
     private UserRepository userRepository;
+    private SendMail sendMail;
 
-    public RideRequestServiceImpl(RideRequestRepository repository, VehicleRepository vehicleRepository, UserRepository userRepository) {
+    public RideRequestServiceImpl(RideRequestRepository repository, VehicleRepository vehicleRepository, UserRepository userRepository, SendMail sendMail) {
         this.repository = repository;
         this.vehicleRepository = vehicleRepository;
         this.userRepository = userRepository;
+        this.sendMail = sendMail;
     }
 
     /**
@@ -204,6 +206,20 @@ public class RideRequestServiceImpl implements RideRequestService {
             rideRequestDTO.setStatus(status);
             RideRequest request = rideRequestDTOConverter(rideRequestDTO);
             repository.save(request);
+
+            String userEmail = request.getUser().getEmail();
+            String plateNumber = request.getVehicle().getPlateNumber();
+            String carName = request.getVehicle().getName();
+
+            String emailText = "Your request has been declined";
+
+            if (request.getStatus()==RequestStatus.APPROVED) {
+                emailText = "Your request has been approved with the following vehicle:" + "\n"+
+                        "Car: " + carName+ "\n"+
+                        "Plate Number: " + plateNumber;
+            }
+
+            sendMail.sendEmail(userEmail, emailText);
 
         } catch (Exception e) {
             log.error("Error occurred in RideRequestServiceImpl while updating ride request status: {}", e.getMessage());
