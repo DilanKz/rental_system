@@ -9,6 +9,7 @@ import com.car_rental.car_rental_system.repo.UserRepository;
 import com.car_rental.car_rental_system.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -70,11 +71,13 @@ public class UserServiceImpl implements UserService {
         try {
             UserDTO dto = findByUsername(userDTO.getUsername());
             Admin admin = adminRepository.findByUsername(userDTO.getUsername()).orElse(null);
-            System.out.println(admin);
 
             if (dto != null || admin != null) {
                 throw new BadCredentials("Username is not available");
             }
+
+            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+            userDTO.setPassword(encoder.encode(userDTO.getPassword()));
 
             userRepository.save(new User(0, userDTO.getName(), userDTO.getEmail(), userDTO.getUsername(), userDTO.getPassword()));
 
