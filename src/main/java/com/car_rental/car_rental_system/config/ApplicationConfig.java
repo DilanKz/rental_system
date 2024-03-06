@@ -41,13 +41,13 @@ public class ApplicationConfig {
                 return User.builder()
                         .username(user.getUsername())
                         .password(user.getPassword())
-                        .authorities("ROLE_USER")
+                        .authorities(user.getRole())
                         .build();
             } else {
                 return User.builder()
                         .username(admin.getUsername())
                         .password(admin.getPassword())
-                        .authorities("ROLE_ADMIN")
+                        .authorities(admin.getRole())
                         .build();
             }
         };
