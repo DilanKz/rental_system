@@ -1,9 +1,11 @@
 package com.car_rental.car_rental_system.service;
 
 import io.jsonwebtoken.Claims;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.security.Key;
+import java.util.Collection;
 
 /**
  * @author Dilan
@@ -26,6 +28,14 @@ public interface JwtService {
      * @return The username extracted from the token
      */
     String extractUsername(String token);
+
+    /**
+     * Retrieves the roles (authorities) from the given JWT token.
+     *
+     * @param token The JWT token from which to retrieve the roles.
+     * @return A collection of GrantedAuthority representing the roles extracted from the token.
+     */
+    Collection<? extends GrantedAuthority> getRolesFromToken(String token);
 
     /**
      * Validates the given JWT token against the provided UserDetails.
