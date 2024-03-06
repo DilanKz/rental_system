@@ -10,13 +10,20 @@ import io.jsonwebtoken.security.Keys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.Collection;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author Dilan
@@ -29,6 +36,12 @@ public class JwtServiceImpl implements JwtService {
     private final String SECRET_KEY = "3A1F79A64C0B8E9CF29A670BBD8F5A436A3D344B2A683F0A3B2507E53BB1CD07";
     private static final int MINUTES = 60;
 
+    private UserDetailsService userDetailsService;
+
+    public JwtServiceImpl(UserDetailsService userDetailsService) {
+        this.userDetailsService = userDetailsService;
+    }
+
     /**
      * Generates a JWT token for the given username.
      *
@@ -38,10 +51,13 @@ public class JwtServiceImpl implements JwtService {
     @Override
     public String generateToken(String username) {
         log.info("Generating JWT token for username: {} in JwtServiceImpl", username);
+        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+
         try {
             Instant now = Instant.now();
             return Jwts.builder()
                     .setSubject(username)
+                    .claim("role",userDetails.getAuthorities())
                     .setIssuedAt(Date.from(now))
                     .setExpiration(Date.from(now.plus(MINUTES, ChronoUnit.MINUTES)))
                     .signWith(getSignInKey(), SignatureAlgorithm.HS256)
@@ -69,6 +85,28 @@ public class JwtServiceImpl implements JwtService {
             throw e;
         }
     }
+
+    /**
+     * Retrieves the roles (authorities) from the given JWT token.
+     *
+     * @param token The JWT token from which to retrieve the roles.
+     * @return A collection of GrantedAuthority representing the roles extracted from the token.
+     */
+    @Override
+    public Collection<? extends GrantedAuthority> getRolesFromToken(String token) {
+        log.info("Extracting roles from JWT token in JwtServiceImpl");
+        try {
+            Claims claims = getTokenBody(token);
+            List<Map<String, String>> roleClaims = (List<Map<String, String>>) claims.get("role");
+            return roleClaims.stream()
+                    .map(roleClaim -> new SimpleGrantedAuthority(roleClaim.get("authority")))
+                    .collect(Collectors.toList());
+        } catch (Exception e) {
+            log.error("Error occurred while extracting roles from JWT token in JwtServiceImpl: {}", e.getMessage());
+            throw e;
+        }
+    }
+
 
     /**
      * Validates the given JWT token against the provided UserDetails.
