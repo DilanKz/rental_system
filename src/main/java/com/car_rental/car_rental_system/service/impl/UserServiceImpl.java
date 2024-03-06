@@ -46,7 +46,7 @@ public class UserServiceImpl implements UserService {
             List<UserDTO> userDTOS = new ArrayList<>();
 
             for (User user : users) {
-                userDTOS.add(new UserDTO(user.getUid(), user.getName(), user.getEmail(), user.getUsername(), user.getPassword()));
+                userDTOS.add(new UserDTO(user.getUid(), user.getName(), user.getEmail(), user.getUsername(), user.getPassword(), user.getRole()));
             }
 
             log.info("Found {} users", userDTOS.size());
@@ -79,7 +79,7 @@ public class UserServiceImpl implements UserService {
             BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
             userDTO.setPassword(encoder.encode(userDTO.getPassword()));
 
-            userRepository.save(new User(0, userDTO.getName(), userDTO.getEmail(), userDTO.getUsername(), userDTO.getPassword()));
+            userRepository.save(new User(0, userDTO.getName(), userDTO.getEmail(), userDTO.getUsername(), userDTO.getPassword(), userDTO.getRole()));
 
         } catch (Exception e) {
             log.error("Error in UserServiceImpl occurred while saving user: {}", e.getMessage());
@@ -104,7 +104,7 @@ public class UserServiceImpl implements UserService {
                 throw new BadCredentials("User not found");
             }
 
-            userRepository.save(new User(userDTO.getUid(), userDTO.getName(), userDTO.getEmail(), userDTO.getUsername(), userDTO.getPassword()));
+            userRepository.save(new User(userDTO.getUid(), userDTO.getName(), userDTO.getEmail(), userDTO.getUsername(), userDTO.getPassword(), userDTO.getRole()));
         } catch (Exception e) {
             log.error("Error in UserServiceImpl occurred while updating user: {}", e.getMessage());
             throw new RuntimeException(e.getMessage());
@@ -126,7 +126,7 @@ public class UserServiceImpl implements UserService {
 
             if (user == null) return null;
 
-            return new UserDTO(user.getUid(), user.getName(), user.getEmail(), user.getUsername(), user.getPassword());
+            return new UserDTO(user.getUid(), user.getName(), user.getEmail(), user.getUsername(), user.getPassword(), user.getRole());
 
         } catch (Exception e) {
             log.error("Error in UserServiceImpl occurred while finding user by id {}: {}", id, e.getMessage());
@@ -149,7 +149,7 @@ public class UserServiceImpl implements UserService {
 
             if (user == null) return null;
 
-            return new UserDTO(user.getUid(), user.getName(), user.getEmail(), user.getUsername(), user.getPassword());
+            return new UserDTO(user.getUid(), user.getName(), user.getEmail(), user.getUsername(), user.getPassword(),user.getRole());
 
         } catch (Exception e) {
             log.error("Error in UserServiceImpl occurred in UserServiceImpl while finding user by username {}: {}", username, e.getMessage());
