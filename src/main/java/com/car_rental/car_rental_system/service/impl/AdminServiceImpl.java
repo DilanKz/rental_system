@@ -45,7 +45,7 @@ public class AdminServiceImpl implements AdminService {
             }
 
             // Map admin entity to AdminDTO and return
-            return new AdminDTO(admin.getId(), admin.getUsername(), admin.getPassword());
+            return new AdminDTO(admin.getId(), admin.getUsername(), admin.getPassword(), admin.getRole());
 
         }catch (Exception e){
             log.error("Error occurred in AdminServiceImpl while finding admin by username {}: {}", username, e.getMessage());
